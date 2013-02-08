@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="theme_entry">
+        <item>Svetla Tema</item>
+        <item>Svetla Tema sa tamnim Action barom</item>
+        <item>Tamna Tema</item>  
+    </string-array>
+
+    <string-array name="theme_values">
+        <item>light</item>
+        <item>light_dark_action_bar</item>
+        <item>dark</item>  
+    </string-array>
+    
+    <string-array name="curency_entry">
+		<item>DIN - Srbija</item>
+		<item>EUR - Evropska Unija</item>
+        <item>GBP - Velika Britanija</item>
+        <item>HRK - Hrvatska</item>
+        <item>HUF - Mađarska</item> 
+        <item>JPY - Japan</item> 
+        <item>KWD - Kuvajt</item>
+        <item>NOK - Norveška</item>
+        <item>SEK - Švetska</item>
+        <item>USD - Sjedinjene Države</item>
+        <item>DKK - Danska</item>
+        <item>CZK - Ceska</item>
+        <item>CHF - Švajcarska</item>
+        <item>CAD - Canada</item>
+        <item>BAM - Bosna and Hercegovina</item>
+        <item>AUD - Australja</item>
+       
+    </string-array>
+
+    <string-array name="curency_values">
+        <item>din</item>
+		<item>eur</item>
+        <item>gbp</item>
+        <item>hrk</item>  
+        <item>huf</item>
+        <item>jpy</item>
+        <item>kwd</item>
+        <item>nok</item>
+        <item>sek</item>
+        <item>usd</item>
+        <item>dkk</item>
+        <item>czk</item>
+        <item>chf</item>
+        <item>cad</item>
+        <item>bam</item>
+        <item>aud</item>
+        
+    </string-array>
+    
+	<string-array name="update_entry">
+        <item>1sat</item>
+        <item>3sata</item>
+        <item>6sati</item>  
+		<item>12sati</item>
+        <item>18sati</item>
+        <item>24sata</item>  
+    </string-array>
+
+    <string-array name="update_values">
+		<item>3600000</item>
+        <item>10800000</item>
+        <item>21600000</item>  
+		<item>43200000</item>
+        <item>64800000</item>
+        <item>86400000</item>  
+    </string-array>
+	
+    <string-array name="units">
+		<item>komada</item>
+        <item>kg</item>
+        <item>litara</item>  
+		<item>gr</item>
+        <item>cm</item>
+        <item>paketa</item>  
+        <item>inča</item>
+        <item>stopa</item>
+        <item>flaša</item>  
+		<item>kutija</item>
+        <item>jedinica</item>
+        <item>para</item>  
+    </string-array>
+</resources>

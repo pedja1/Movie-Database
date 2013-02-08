@@ -1,0 +1,14 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android" >
+
+    <item
+        android:id="@+id/menu_edit"
+        android:showAsAction="ifRoom|withText"
+        android:title="@string/edit"
+        android:icon="@drawable/edit_dark"/>
+
+	<item
+        android:id="@+id/menu_delete"
+        android:showAsAction="ifRoom|withText"
+        android:title="@string/delete"
+        android:icon="@drawable/delete_dark"/>
+</menu>

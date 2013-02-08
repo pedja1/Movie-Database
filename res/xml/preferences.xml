@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen
+        xmlns:android="http://schemas.android.com/apk/res/android">
+
+		<PreferenceScreen
+                android:title="@string/backup_restore"
+                android:summary=""
+				android:icon="@drawable/save">
+
+            <intent android:action="rs.pedjaapps.shoppinglist.BackupRestore"
+                     />
+
+        </PreferenceScreen>
+		
+    <PreferenceCategory
+            android:title="@string/ui_options">
+
+       
+        <ListPreference
+                android:key="theme"
+                android:defaultValue="light"
+                android:title="@string/theme"
+                android:summary=""
+                android:entries="@array/theme_entry"
+                android:entryValues="@array/theme_values"
+                android:dialogTitle="@string/select_theme" />
+
+    </PreferenceCategory>
+
+</PreferenceScreen>
