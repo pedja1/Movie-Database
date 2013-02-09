@@ -2,41 +2,25 @@ package rs.pedjaapps.md.ui;
 
 import android.app.*;
 import android.content.*;
-import android.net.Uri;
 import android.os.*;
 import android.preference.*;
-import android.view.View;
-import android.view.Window;
+import android.util.*;
+import android.view.*;
 import android.widget.*;
-import android.widget.AdapterView.OnItemClickListener;
-
-import java.io.BufferedInputStream;
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.net.URL;
-import java.net.URLConnection;
+import android.widget.AdapterView.*;
+import java.io.*;
+import java.net.*;
 import java.util.*;
-
-import org.apache.http.HttpEntity;
-import org.apache.http.HttpResponse;
-import org.apache.http.client.ClientProtocolException;
-import org.apache.http.client.methods.HttpGet;
-import org.apache.http.impl.client.DefaultHttpClient;
-import org.apache.http.params.BasicHttpParams;
-import org.apache.http.util.ByteArrayBuffer;
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
-
+import org.apache.http.*;
+import org.apache.http.client.*;
+import org.apache.http.client.methods.*;
+import org.apache.http.impl.client.*;
+import org.apache.http.params.*;
+import org.apache.http.util.*;
+import org.json.*;
+import rs.pedjaapps.md.*;
 import rs.pedjaapps.md.entries.*;
 import rs.pedjaapps.md.helpers.*;
-
-import rs.pedjaapps.md.R;
 
 
 public class SearchResults extends Activity {
@@ -148,62 +132,110 @@ public class SearchResults extends Activity {
 					JSONObject jO = new JSONObject(result);
 					
 					String title = jO.getString("title");
-					String runtime = jO.getJSONArray("runtime").getString(0);
-					Double rating = jO.getDouble("rating");
+					String runtime = "";
+					if(jO.has("runtime")){
+					runtime = jO.getJSONArray("runtime").getString(0);
+					}
+					
+				String type = "";
+				if(jO.has("type")){
+					type = jO.getString("type");
+				}
+					
+					Double rating = 0.0;
+					if(jO.has("rating")){
+					rating = jO.getDouble("rating");
+					}
+					String genres = "";
+					if(jO.has("genres")){
 					StringBuilder genresB = new StringBuilder();
 					JSONArray genresArray = jO.getJSONArray("genres");
 					for(int i = 0; i<genresArray.length(); i++ ){
 						genresB.append(genresArray.getString(i));
 						genresB.append(", ");
 					}
-					String genres = genresB.toString();
-					
+					genres = genresB.toString();
+					}
+					String lang = "";
+				    if(jO.has("language")){
 					StringBuilder langB = new StringBuilder();
 					JSONArray langArray = jO.getJSONArray("language");
 					for(int i = 0; i<langArray.length(); i++ ){
 						langB.append(langArray.getString(i));
 						langB.append(", ");
 					}
-					String lang = langB.toString();
-					String poster = jO.getString("poster");
-					int year = jO.getInt("year");
-					String url = jO.getString("imdb_url");
+					lang = langB.toString();
+					}
+					String poster = "";
+					String posterFile = "";
+				    if(jO.has("poster")){
+					poster = jO.getString("poster");
+						posterFile = "/sdcard/MDb/posters"+poster.substring(poster.lastIndexOf("/"));
+					}
+					int year = 0;
+				    if(jO.has("year")){
+				    year = jO.getInt("year");
+					}
+					String url = "";
+				    if(jO.has("imdb_url")){
+					url = jO.getString("imdb_url");
+					}
+					String actors = "";
+				    if(jO.has("actors")){
 					StringBuilder actorsB = new StringBuilder();
 					JSONArray actorsArray = jO.getJSONArray("actors");
 					for(int i = 0; i<actorsArray.length(); i++ ){
 						actorsB.append(actorsArray.getString(i));
 						actorsB.append(", ");
 					}
-					String actors = actorsB.toString();
-					String plot = jO.getString("plot_simple");
-					int date = jO.getInt("release_date");
-					
+					actors = actorsB.toString();
+					}
+					String plot = "";
+			    	if(jO.has("plot_simple")){
+					plot = jO.getString("plot_simple");
+					}
+					int date = 0;
+				    if(jO.has("release_date")){
+					date = jO.getInt("release_date");
+					}
+					String country = "";
+				    if(jO.has("country")){
 					StringBuilder countryB = new StringBuilder();
 					JSONArray countryArray = jO.getJSONArray("country");
 					for(int i = 0; i<countryArray.length(); i++ ){
 						countryB.append(countryArray.getString(i));
 						countryB.append(", ");
 					}
-					String country = countryB.toString();
-					DownloadFromUrl(poster, poster.substring(poster.lastIndexOf("/"), poster.length()));
+					country = countryB.toString();
+					}
+					
+				String directors = "";
+				if(jO.has("directors")){
+					StringBuilder dirB = new StringBuilder();
+					JSONArray directorsArray = jO.getJSONArray("directors");
+					for(int i = 0; i<directorsArray.length(); i++ ){
+						dirB.append(directorsArray.getString(i));
+						dirB.append(", ");
+					}
+					directors = dirB.toString();
+				}
+					
+				String res = DownloadFromUrl(poster, posterFile);
 					DatabaseHandler db = new DatabaseHandler(SearchResults.this);
-					db.addMovie(new MoviesDatabaseEntry(title, runtime, rating, genres, "",
-							lang, "/sdcard/MDb/posters"+poster.substring(poster.lastIndexOf("/"), poster.length()), url, "", actors, plot, year, country, date), "watched");
+					db.addMovie(new MoviesDatabaseEntry(title, runtime, rating, genres, type,
+							lang, posterFile, url, directors, actors, plot, year, country, date), "watched");
 				
-				
+				return res;
 			} catch (ClientProtocolException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+				return e.getMessage();
 			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+				return e.getMessage();
 			} catch (JSONException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+				return e.getMessage();
 			}           
 			
 			
-			return "";
+			
 		}
 
 		@Override
@@ -215,6 +247,10 @@ public class SearchResults extends Activity {
 		protected void onPostExecute(String result)
 		{
 			setProgressBarIndeterminateVisibility(false);
+			finish();
+			if(result.length()!=0){
+			Toast.makeText(SearchResults.this, result, Toast.LENGTH_LONG).show();
+			}
 		}
 	}	
 	
@@ -295,7 +331,7 @@ public class SearchResults extends Activity {
 		}
 	}	
 
-	public void DownloadFromUrl(String imageURL, String fileName) {  //this is the downloader method
+	public String DownloadFromUrl(String imageURL, String fileName) {  //this is the downloader method
         try {
         	File ktDir = new File(Environment.getExternalStorageDirectory() + "/MDb/posters");
 		      if(ktDir.exists()==false){
@@ -327,11 +363,12 @@ public class SearchResults extends Activity {
                 FileOutputStream fos = new FileOutputStream(file);
                 fos.write(baf.toByteArray());
                 fos.close();
-                
+			return "";
 
         } catch (IOException e) {
-                
-        }
+                Log.e("error saving image", e.getMessage());
+        	return e.getMessage();
+		}
 
 }
  

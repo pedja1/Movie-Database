@@ -9,7 +9,7 @@ public class MoviesDatabaseEntry
     String _runtime;
     double _rating;
     String _genres;
-    String _rated;
+    String _type;
     String _lang;
     String _poster;
     String _url;
@@ -27,7 +27,7 @@ public class MoviesDatabaseEntry
     }
 
 	public MoviesDatabaseEntry(int _id, String _title, String _runtime,
-			double _rating, String _genres, String _rated, String _lang,
+			double _rating, String _genres, String _type, String _lang,
 			String _poster, String _url, String _director, String _actors,
 			String _plot, int _year, String _country, int _date) {
 		
@@ -36,7 +36,7 @@ public class MoviesDatabaseEntry
 		this._runtime = _runtime;
 		this._rating = _rating;
 		this._genres = _genres;
-		this._rated = _rated;
+		this._type = _type;
 		this._lang = _lang;
 		this._poster = _poster;
 		this._url = _url;
@@ -49,7 +49,7 @@ public class MoviesDatabaseEntry
 	}
    
 	public MoviesDatabaseEntry(String _title, String _runtime,
-			double _rating, String _genres, String _rated, String _lang,
+			double _rating, String _genres, String _type, String _lang,
 			String _poster, String _url, String _director, String _actors,
 			String _plot, int _year, String _country, int _date) {
 		
@@ -57,7 +57,7 @@ public class MoviesDatabaseEntry
 		this._runtime = _runtime;
 		this._rating = _rating;
 		this._genres = _genres;
-		this._rated = _rated;
+		this._type = _type;
 		this._lang = _lang;
 		this._poster = _poster;
 		this._url = _url;
@@ -109,12 +109,12 @@ public class MoviesDatabaseEntry
 		this._genres = _genres;
 	}
 
-	public String get_rated() {
-		return _rated;
+	public String get_type() {
+		return _type;
 	}
 
-	public void set_rated(String _rated) {
-		this._rated = _rated;
+	public void set_type(String _type) {
+		this._type = _type;
 	}
 
 	public String get_lang() {

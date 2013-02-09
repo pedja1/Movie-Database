@@ -39,6 +39,9 @@ public final class MoviesAdapter extends ArrayAdapter<MoviesEntry>
 		if(image!=null && image.length()>0){
 		viewHolder.imageView.setImageURI(Uri.parse(image));
         }
+		else{
+			viewHolder.imageView.setImageResource(R.drawable.ic_launcher);
+		}
 		return view;
 	}
 

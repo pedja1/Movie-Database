@@ -2,9 +2,9 @@
 <resources>
 
     <string name="app_name">MDb</string>
-    <string name="no_items1">There are no items</string>
+    <string name="no_items1">There are no movies</string>
     <string name="tap">Tap</string>
-    <string name="no_items2">to add new items</string>
+    <string name="no_items2">to add new movie</string>
     <string name="backup_desc">Backup all application data to external storage.\n\nNote: All existing data will be wiped before restore.</string>
     <string name="backup">Backup</string>
     <string name="restore">Restore</string>

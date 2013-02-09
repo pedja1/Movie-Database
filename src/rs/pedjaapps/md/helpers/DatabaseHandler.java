@@ -12,7 +12,7 @@ public class DatabaseHandler extends SQLiteOpenHelper
 
     // All Static variables
     // Database Version
-    private static final int DATABASE_VERSION = 3;
+    private static final int DATABASE_VERSION = 7;
 
     // Database Name
     private static final String DATABASE_NAME = "MDb.db";
@@ -25,7 +25,7 @@ public class DatabaseHandler extends SQLiteOpenHelper
 	
 	
 	private static final String[] filds = {"_id", "title", "runtime", "rating", "genres",
-			"rated","language", "poster", "url", "director",
+			"type","language", "poster", "url", "director",
 			"actors", "plot", "year", "country", "date"};
 	
     public DatabaseHandler(Context context)
@@ -57,7 +57,7 @@ public class DatabaseHandler extends SQLiteOpenHelper
 			")";
         
 		String CREATE_WATCHED_TABLE = "CREATE TABLE " + TABLE_WATCHED + "("
-			+ filds[0] + " INTEGER PRIMARY KEY,"
+			+ filds[0] + " INTEGER PRIMARY KEY AUTOINCREMENT,"
 			+ filds[1] + " TEXT,"
 			+ filds[2] + " TEXT," 
 			+ filds[3] + " DOUBLE,"
@@ -108,7 +108,7 @@ public class DatabaseHandler extends SQLiteOpenHelper
         values.put(filds[2], movie.get_runtime());
         values.put(filds[3], movie.get_rating());
         values.put(filds[4], movie.get_genres()); 
-        values.put(filds[5], movie.get_rated());
+        values.put(filds[5], movie.get_type());
         values.put(filds[6], movie.get_lang()); 
         values.put(filds[7], movie.get_poster());
         values.put(filds[8], movie.get_url()); 
@@ -122,6 +122,7 @@ public class DatabaseHandler extends SQLiteOpenHelper
         // Inserting Row
         db.insert(table, null, values);
         db.close(); // Closing database connection
+		
     }
     
     public MoviesDatabaseEntry getMovie(String table, int id)
@@ -172,6 +173,96 @@ public class DatabaseHandler extends SQLiteOpenHelper
         return items;
     }
 	
+	public MoviesDatabaseEntry getMovieByName(String table, String movieName)
+	{
+        SQLiteDatabase db = this.getReadableDatabase();
+
+        Cursor cursor = db.query(table, new String[] {filds[0],
+									 filds[1],
+									 filds[2],
+									 filds[3],
+									 filds[4],
+									 filds[5],
+									 filds[6],
+									 filds[7],
+									 filds[8],
+									 filds[9],
+									 filds[10],
+									 filds[11],
+									 filds[12],
+									 filds[13],
+									 filds[14]
+
+
+								 }, filds[1] + "=?",
+								 new String[] { movieName }, null, null, null, null);
+        if (cursor != null)
+            cursor.moveToFirst();
+
+        MoviesDatabaseEntry items = new MoviesDatabaseEntry(Integer.parseInt(cursor.getString(0)),
+															cursor.getString(1),
+															cursor.getString(2),
+															cursor.getDouble(3),
+															cursor.getString(4),
+															cursor.getString(5),
+															cursor.getString(6),
+															cursor.getString(7),
+															cursor.getString(8),
+															cursor.getString(9),
+															cursor.getString(10),
+															cursor.getString(11),
+															cursor.getInt(12),
+															cursor.getString(13),
+															cursor.getInt(14)
+															);
+        // return list
+        db.close();
+        cursor.close();
+        return items;
+    }
+	
+	public MoviesDatabaseEntry getMovieByIndex(String table, int id)
+	{
+        List<MoviesDatabaseEntry> lists = new ArrayList<MoviesDatabaseEntry>();
+        // Select All Query
+        String selectQuery = "SELECT * FROM " +table+" LIMIT 1 OFFSET "+id;
+
+        SQLiteDatabase db = this.getWritableDatabase();
+        Cursor cursor = db.rawQuery(selectQuery, null);
+
+        // looping through all rows and adding to list
+		MoviesDatabaseEntry list = new MoviesDatabaseEntry();
+        if (cursor!=null)
+		{
+            cursor.moveToFirst();
+            
+                list.set_id(Integer.parseInt(cursor.getString(0)));
+                list.set_title(cursor.getString(1));
+                list.set_runtime(cursor.getString(2));
+                list.set_rating(cursor.getDouble(3));
+				list.set_genres(cursor.getString(4));
+				list.set_type(cursor.getString(5));
+				list.set_lang(cursor.getString(6));
+				list.set_poster(cursor.getString(7));
+				list.set_url(cursor.getString(8));
+				list.set_director(cursor.getString(9));
+				list.set_actors(cursor.getString(10));
+				list.set_plot(cursor.getString(11));
+				list.set_year(cursor.getInt(12));
+				list.set_country(cursor.getString(13));
+				list.set_date(cursor.getInt(14));
+
+
+                
+            
+        }
+
+        // return list
+        db.close();
+        cursor.close();
+        return list;
+    }
+	
 	public List<MoviesDatabaseEntry> getAllMovies(String table)
 	{
         List<MoviesDatabaseEntry> lists = new ArrayList<MoviesDatabaseEntry>();
@@ -191,7 +282,7 @@ public class DatabaseHandler extends SQLiteOpenHelper
                 list.set_runtime(cursor.getString(2));
                 list.set_rating(cursor.getDouble(3));
 				list.set_genres(cursor.getString(4));
-				list.set_rated(cursor.getString(5));
+				list.set_type(cursor.getString(5));
 				list.set_lang(cursor.getString(6));
 				list.set_poster(cursor.getString(7));
 				list.set_url(cursor.getString(8));
@@ -222,6 +313,8 @@ public class DatabaseHandler extends SQLiteOpenHelper
         
         db.close();
     }
+	
+	
 	
 	public boolean itemExists(String table, String movieName) {
     	SQLiteDatabase db = this.getReadableDatabase();
@@ -258,7 +351,7 @@ public class DatabaseHandler extends SQLiteOpenHelper
         values.put(filds[2], movie.get_runtime());
         values.put(filds[3], movie.get_rating());
         values.put(filds[4], movie.get_genres()); 
-        values.put(filds[5], movie.get_rated());
+        values.put(filds[5], movie.get_type());
         values.put(filds[6], movie.get_lang()); 
         values.put(filds[7], movie.get_poster());
         values.put(filds[8], movie.get_url()); 

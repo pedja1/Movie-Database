@@ -37,6 +37,7 @@ public class MoviesActivity extends Activity {
 	SharedPreferences sharedPrefs;
 	RelativeLayout container;
 	SearchView searchView;
+	List<MoviesEntry> entries;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -60,7 +61,7 @@ public class MoviesActivity extends Activity {
 		setContentView(R.layout.activity_list);
 		
 		Intent intent = getIntent();
-		listName ="Watchlist";// intent.getExtras().getString("name");
+		listName ="watched";// intent.getExtras().getString("name");
 		db = new DatabaseHandler(this);
 		//fan = (FanView) findViewById(R.id.fan_view);
 		//fan.setViews(R.layout.activity_list, R.layout.side_list);
@@ -78,7 +79,7 @@ public class MoviesActivity extends Activity {
 	        searchView.setIconifiedByDefault(false);
 	        
 		ImageView plus = (ImageView)findViewById(R.id.action_plus);
-		plus.setImageResource(isLight ? R.drawable.add_light : R.drawable.add_dark);
+		plus.setImageResource(isLight ? R.drawable.search_lite : R.drawable.search_dark);
 		
 		container = (RelativeLayout)findViewById(R.id.item_container);
 		container.setBackgroundResource(isLight ? R.drawable.background_holo_light : R.drawable.background_holo_dark);
@@ -144,19 +145,27 @@ public class MoviesActivity extends Activity {
 	}
 	
 	
-	
+	public void onResume(){
+		moviesAdapter.clear();
+		for (final MoviesEntry entry : getItemsEntries()) {
+			moviesAdapter.add(entry);
+		}
+		moviesAdapter.notifyDataSetChanged();
+		setUI();
+		super.onResume();
+	}
 	
 	
 	private List<MoviesEntry> getItemsEntries() {
 
-		final List<MoviesEntry> entries = new ArrayList<MoviesEntry>();
-		/*List<MoviesDatabaseEntry> dbEntry = db.getAllMovies(listName);
+		entries = new ArrayList<MoviesEntry>();
+		List<MoviesDatabaseEntry> dbEntry = db.getAllMovies(listName);
 		for (MoviesDatabaseEntry e : dbEntry) {
 			entries.add(new MoviesEntry(e.get_title(), e.get_year(), e
 					.get_rating(), e.get_poster(), e.get_genres(), e.get_actors()));
-		}*/
-		entries.add(new MoviesEntry("Lost", 2006, 8.4,
-				"", "Action, Sci_Fi", "Actor 1, Actor 2"));
+		}
+	//	entries.add(new MoviesEntry("Lost", 2006, 8.4,
+			//	"", "Action, Sci_Fi", "Actor 1, Actor 2"));
 		return entries;
 	}
 
@@ -189,9 +198,6 @@ public class MoviesActivity extends Activity {
 			else if(theme.equals("light_dark_action_bar")){
 				isLight = false;
 			}
-		menu.add(1, 1, 1, getResources().getString(R.string.add))
-        .setIcon(isLight ? R.drawable.add_light : R.drawable.add_dark)
-        .setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM | MenuItem.SHOW_AS_ACTION_WITH_TEXT);
 		menu.add("Search")
         .setIcon(isLight ? R.drawable.search_lite : R.drawable.search_dark)
         .setActionView(searchView)
@@ -203,14 +209,7 @@ public class MoviesActivity extends Activity {
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 
-		if (item.getItemId() == 1) {
-			// addListDialog();
-			Intent intent = new Intent(this, Lists.class);
-			intent.putExtra("name", "");
-			intent.putExtra("listName", listName);
-			startActivityForResult(intent, ADD_ITEM);
-
-		}
+	
 
 		
 		if (item.getItemId() == android.R.id.home || item.getItemId() == 0) {
@@ -338,7 +337,7 @@ public class MoviesActivity extends Activity {
 	    	
 	    	
 	    	if(item.getItemId()==2){
-	    		deleteItemDialog(id);
+	    		deleteItemDialog(entries.get(id).getTitle(), id);
 	    	}
 	    	mode.finish();
 	        return true;
@@ -349,7 +348,7 @@ public class MoviesActivity extends Activity {
 	    }
 	}
 	
-	private void deleteItemDialog(final int id) {
+	private void deleteItemDialog(final String movieName, final int id) {
 		AlertDialog.Builder builder = new AlertDialog.Builder(this);
 
 		builder.setTitle(getResources().getString(R.string.delete_item));
@@ -362,11 +361,11 @@ public class MoviesActivity extends Activity {
 					@Override
 					public void onClick(DialogInterface dialog, int which) {
 						MoviesDatabaseEntry entry = db
-								.getMovie(listName, id);
+								.getMovieByName(listName, movieName);
 						
 							db.deleteMovie(entry, listName);
 						
-						moviesAdapter.remove(moviesAdapter.getItem(id-1));
+						moviesAdapter.remove(moviesAdapter.getItem(id));
 						moviesAdapter.notifyDataSetChanged();
 						setUI();
 						
@@ -387,23 +386,6 @@ public class MoviesActivity extends Activity {
 		alert.show();
 	}
 	
-	/*@Override
-	public boolean onKeyUp(int keyCode, KeyEvent event) {
-	    if(keyCode == KeyEvent.KEYCODE_SEARCH){
-	    	onSearchRequested();
-	    	return false;
-	    }else{
-	        return super.onKeyUp(keyCode, event); 
-	    }
-	}
 	
-	@Override
-	 public boolean onSearchRequested() {
-
-	     // your logic here
-
-		return super.onSearchRequested();
-
-	 }*/
 	
 }
