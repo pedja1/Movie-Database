@@ -4,6 +4,7 @@ import android.app.*;
 import android.content.*;
 import android.os.*;
 import android.preference.*;
+import android.provider.*;
 import android.util.*;
 import android.view.*;
 import android.widget.*;
@@ -21,6 +22,7 @@ import org.json.*;
 import rs.pedjaapps.md.*;
 import rs.pedjaapps.md.entries.*;
 import rs.pedjaapps.md.helpers.*;
+import rs.pedjaapps.md.providers.*;
 
 
 public class SearchResults extends Activity {
@@ -91,6 +93,7 @@ public class SearchResults extends Activity {
 	}
 
 	private void handleIntent(Intent intent) {
+		SearchRecentSuggestions suggestions = new SearchRecentSuggestions(this,SuggestionProvider.AUTHORITY, SuggestionProvider.MODE);
 		if (Intent.ACTION_SEARCH.equals(intent.getAction())) {
 		    String query = intent.getStringExtra(SearchManager.QUERY).replaceAll(" ", "%20");
 		    Bundle appData = getIntent().getBundleExtra(SearchManager.APP_DATA);
@@ -98,13 +101,14 @@ public class SearchResults extends Activity {
 			    listName = appData.getString("listName");
 			    System.out.println(listName+"test");
 			}
-			System.out.println(listName+"test");
+		
+			suggestions.saveRecentQuery(query, null);
 		    new TitleSearchParser().execute(new String[] {query});
 		    }
 		else{
 			listName = getIntent().getExtras().getString("listName");
 			String query = getIntent().getExtras().getString("query").replaceAll(" ", "%20");
-			System.out.println(listName+query+"test");
+			suggestions.saveRecentQuery(query, null);
 			new TitleSearchParser().execute(new String[] {query});
 		}
 		

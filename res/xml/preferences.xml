@@ -7,7 +7,7 @@
                 android:summary=""
 				android:icon="@drawable/save">
 
-            <intent android:action="rs.pedjaapps.shoppinglist.BackupRestore"
+            <intent android:action="rs.pedjaapps.md.ui.BackupRestore"
                      />
 
         </PreferenceScreen>

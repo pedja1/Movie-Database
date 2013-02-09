@@ -236,6 +236,10 @@ public class BackupRestore extends Activity {
 		  final File backupFile = new File(Environment.getExternalStorageDirectory(), 
 		      "MDb/MDb.db");
 		  
+		final File prefsSFile = new File(context.getFilesDir(), "../databases/suggestions.db");
+		final File backupSFile = new File(Environment.getExternalStorageDirectory(), 
+										 "MDb/suggestions.db");
+		
 		  
 		  try {
 			  FileInputStream fin = new FileInputStream(prefsFile);
@@ -258,6 +262,29 @@ public class BackupRestore extends Activity {
 			  dbBackupMessage = e.getMessage();
 		    //return false;
 		  }
+		  
+		try {
+			FileInputStream fin = new FileInputStream(prefsSFile);
+			FileOutputStream fout = new FileOutputStream(backupSFile);
+		    FileChannel src = fin.getChannel();
+		    FileChannel dst = fout.getChannel();
+
+		    dst.transferFrom(src, 0, src.size());
+
+		    src.close();
+		    dst.close();
+		    fin.close();
+		    fout.close();
+		    dbBackupMessage = "Backup Successful";
+		    //return true;
+		} catch (FileNotFoundException e) {
+		    dbBackupMessage = e.getMessage();
+		    //return false;
+		} catch (IOException e) {
+			dbBackupMessage = e.getMessage();
+		    //return false;
+		}
+		  
 		}
 	
 	@Override
@@ -280,6 +307,9 @@ public class BackupRestore extends Activity {
 		  final File backupFile = new File(Environment.getExternalStorageDirectory(), 
 		      "MDb/MDb.db");
 		  
+		final File prefsSFile = new File(context.getFilesDir(), "../databases/suggestions.db");
+		final File backupSFile = new File(Environment.getExternalStorageDirectory(), 
+										 "MDb/suggestions.db");
 		  
 		  try {
 			  FileInputStream fin = new FileInputStream(backupFile);
@@ -302,6 +332,29 @@ public class BackupRestore extends Activity {
 			  dbRestoreMessage = e.getMessage();
 		    //return false;
 		  }
+		  
+		try {
+			FileInputStream fin = new FileInputStream(backupSFile);
+			FileOutputStream fout = new FileOutputStream(prefsSFile);
+		    FileChannel src = fin.getChannel();
+		    FileChannel dst = fout.getChannel();
+
+		    dst.transferFrom(src, 0, src.size());
+
+		    src.close();
+		    dst.close();
+		    fin.close();
+		    fout.close();
+		    dbRestoreMessage = "Restore Successful";
+		    //return true;
+		} catch (FileNotFoundException e) {
+		    dbRestoreMessage = e.getMessage();
+		    //return false;
+		} catch (IOException e) {
+			dbRestoreMessage = e.getMessage();
+		    //return false;
+		}
+		  
 		}
 	
 	

@@ -4,15 +4,13 @@ import android.app.*;
 import android.content.*;
 import android.os.*;
 import android.preference.*;
-import android.view.View;
-import android.view.View.OnClickListener;
-import android.view.animation.Animation;
-import android.view.animation.Animation.AnimationListener;
-import android.view.animation.AnimationUtils;
-import android.widget.RelativeLayout;
-
+import android.view.*;
+import android.view.View.*;
+import android.view.animation.*;
+import android.view.animation.Animation.*;
+import android.widget.*;
 import com.google.ads.*;
-import rs.pedjaapps.md.R;
+import rs.pedjaapps.md.*;
 
 public class Lists extends Activity {
 
@@ -110,6 +108,37 @@ public class Lists extends Activity {
 			}
 			
 		});
+	}
+	
+	@Override
+	public boolean onCreateOptionsMenu(Menu menu) {
+		if(theme.equals("light")){
+			isLight = true;
+		}
+		else if(theme.equals("dark")){
+			isLight = false;
+		}
+		else if(theme.equals("light_dark_action_bar")){
+			isLight = false;
+		}
+		menu.add(0,0,0,"Preferences")
+			.setIcon(isLight ? R.drawable.settings_light : R.drawable.settings_dark)
+			.setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM);
+		return true;
+	}
+
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+
+	    switch(item.getItemId()){
+			case 0:
+	            Intent intent = new Intent(this, Preferences.class);
+	            startActivity(intent);
+	            break;
+		}
+
+		return super.onOptionsItemSelected(item);
+
 	}
 	
 }

@@ -36,16 +36,20 @@ public class MoviesActivity extends Activity {
 	
 	ActionMode aMode;
 	TextView totalText;
-	SharedPreferences sharedPrefs;
+	
 	RelativeLayout container;
 	SearchView searchView;
 	List<MoviesEntry> entries;
+	int sortMode = 0;
+	SharedPreferences prefs;
+	SharedPreferences.Editor editor;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
-		sharedPrefs = PreferenceManager
+		prefs = PreferenceManager
 				.getDefaultSharedPreferences(this);
-		theme = sharedPrefs.getString("theme", "light");
+		editor = prefs.edit();
+		theme = prefs.getString("theme", "light");
 		if(theme.equals("light")){
 			isLight = true;
 			setTheme(android.R.style.Theme_Holo_Light);
@@ -62,6 +66,7 @@ public class MoviesActivity extends Activity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_list);
 		
+		sortMode = prefs.getInt("sortOrder", 0);
 		Intent intent = getIntent();
 		listName = intent.getExtras().getString("listName");
 		
@@ -80,6 +85,7 @@ public class MoviesActivity extends Activity {
 	        searchView.setQueryHint("Add new Movie");
 	        searchView.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));
 	        searchView.setIconifiedByDefault(false);
+			searchView.setQueryRefinementEnabled(true);
 	        searchView.setOnQueryTextListener(new OnQueryTextListener() {
 
 	    	    @Override
@@ -106,7 +112,7 @@ public class MoviesActivity extends Activity {
 		
 		
 		
-		boolean ads = sharedPrefs.getBoolean("ads", true);
+		boolean ads = prefs.getBoolean("ads", true);
 		if (ads == true) {
 			AdView adView = (AdView) findViewById(R.id.ad);
 			adView.loadAd(new AdRequest());
@@ -123,7 +129,7 @@ public class MoviesActivity extends Activity {
 
 		moviesListView.setAdapter(moviesAdapter);
 
-		for (final MoviesEntry entry : getItemsEntries()) {
+		for (final MoviesEntry entry : getMoviesEntries()) {
 			moviesAdapter.add(entry);
 
 		}
@@ -166,7 +172,7 @@ public class MoviesActivity extends Activity {
 	
 	public void onResume(){
 		moviesAdapter.clear();
-		for (final MoviesEntry entry : getItemsEntries()) {
+		for (final MoviesEntry entry : getMoviesEntries()) {
 			moviesAdapter.add(entry);
 		}
 		moviesAdapter.notifyDataSetChanged();
@@ -175,7 +181,7 @@ public class MoviesActivity extends Activity {
 	}
 	
 	
-	private List<MoviesEntry> getItemsEntries() {
+	private List<MoviesEntry> getMoviesEntries() {
 
 		entries = new ArrayList<MoviesEntry>();
 		List<MoviesDatabaseEntry> dbEntry = db.getAllMovies(listName);
@@ -183,9 +189,26 @@ public class MoviesActivity extends Activity {
 			entries.add(new MoviesEntry(e.get_title(), e.get_year(), e
 					.get_rating(), e.get_poster(), e.get_genres(), e.get_actors(), e.get_date()));
 		}
-	//	entries.add(new MoviesEntry("Lost", 2006, 8.4,
-			//	"", "Action, Sci_Fi", "Actor 1, Actor 2"));
-		Collections.sort(entries, new SortByNameDescending()); 
+	switch(sortMode){
+		case 1:
+	    	Collections.sort(entries, new SortByNameAscending()); 
+	    	break;
+		case 2:
+			Collections.sort(entries, new SortByNameDescending()); 
+			break;
+		case 3:
+			Collections.sort(entries, new SortByDateAscending()); 
+			break;
+	    case 4:
+			Collections.sort(entries, new SortByDateDescending()); 
+			break;
+		case 5:
+			Collections.sort(entries, new SortByRatingAscending()); 
+			break;
+		case 6:
+			Collections.sort(entries, new SortByRatingDescending()); 
+			break;
+		}
 		return entries;
 	}
 
@@ -272,61 +295,78 @@ public class MoviesActivity extends Activity {
 			else if(theme.equals("light_dark_action_bar")){
 				isLight = false;
 			}
-		menu.add("Search")
+		menu.add(0,9,1,"Search")
         .setIcon(isLight ? R.drawable.search_lite : R.drawable.search_dark)
         .setActionView(searchView)
         .setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM | MenuItem.SHOW_AS_ACTION_COLLAPSE_ACTION_VIEW);
-
+		menu.add(0,0,2,"Preferences")
+			.setIcon(isLight ? R.drawable.settings_light : R.drawable.settings_dark)
+			.setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM);
+        SubMenu sort = menu.addSubMenu(1, 1, 3, "Sort Order");
+		sort.add(1,2,0,"Alphabetically Ascending");
+		sort.add(1,3,1,"Alphabetically Descending");
+		sort.add(1,4,2,"By Release Date Ascending");
+		sort.add(1,5,3,"By Release Date Descending");
+		sort.add(1,6,4,"By Ratings Ascending");
+		sort.add(1,7,5,"By Ratings Descending");
+		sort.add(1,8,6,"List Order");
 		return true;
 	}
 
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 
-	
-
-		
-		if (item.getItemId() == android.R.id.home || item.getItemId() == 0) {
-		
-			return true;
+	    switch(item.getItemId()){
+			case 2:
+				recreateList(1);
+			    break;
+			case 3:
+				recreateList(2);
+				break;
+			case 4:
+				recreateList(3);
+				break;
+			case 5:
+				recreateList(4);
+				break;
+			case 6:
+				recreateList(5);
+				break;
+			case 7:
+				recreateList(6);
+				break;
+			case 8:
+				recreateList(0);
+				break;
+			case 0:
+				Intent i = new Intent(this, Preferences.class);
+	            startActivity(i);
+				break;
+			case android.R.id.home:
+	            // app icon in action bar clicked; go home
+	            Intent intent = new Intent(this, Lists.class);
+	            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+	            startActivity(intent);
+	            break;
 		}
 
 		return super.onOptionsItemSelected(item);
 
 	}
 
-	@Override
-	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-		super.onActivityResult(requestCode, resultCode, data);
-
-		if (resultCode == RESULT_OK) {
-			if (requestCode ==ADD_ITEM ) {
-				//addItem(data);
-				System.out.println("add");
-			}
-			
+	private void recreateList(int sortMode){
+	   this.sortMode = sortMode;
+		moviesAdapter.clear();
+		
+		for (final MoviesEntry entry : getMoviesEntries()) {
+			moviesAdapter.add(entry);
 		}
-
-	}
-
-	public void addItem(Intent data){
-		
-		moviesAdapter.add(new MoviesEntry(data.getExtras().getString(
-				"title"), data.getExtras().getInt(
-						"year"), data.getExtras().getDouble(
-								"rating"), data.getExtras().getString(
-										"image"), data.getExtras().getString(
-												"genres"), data.getExtras().getString(
-														"actors"), data.getExtras().getInt(
-																"date")));
 		moviesAdapter.notifyDataSetChanged();
-		setUI();
-		
-	
+		editor.putInt("sortOrder", sortMode);
+		editor.apply();
 	}
 	
-	
-	
+
 	private void setUI() {
 		if (moviesAdapter.isEmpty() == false) {
 			tv1.setVisibility(View.GONE);
@@ -336,44 +376,6 @@ public class MoviesActivity extends Activity {
 			ll.setVisibility(View.VISIBLE);
 		}
 	}
-
-	/*private void deleteAllDialog() {
-		AlertDialog.Builder builder = new AlertDialog.Builder(this);
-
-		builder.setTitle(getResources().getString(R.string.delete_all_items));
-		builder.setMessage(getResources().getString(R.string.are_you_sure));
-		builder.setIcon(isLight ? R.drawable.delete_light : R.drawable.delete_dark);
-
-		builder.setPositiveButton(getResources()
-				.getString(android.R.string.yes),
-				new DialogInterface.OnClickListener() {
-					@Override
-					public void onClick(DialogInterface dialog, int which) {
-						List<MoviesDatabaseEntry> entry = db
-								.getAllItems(listName);
-						for (MoviesDatabaseEntry e : entry) {
-							db.deleteItem(e, listName);
-						}
-						itemsAdapter.clear();
-						itemsAdapter.notifyDataSetChanged();
-						setUI();
-						
-					}
-				});
-
-		builder.setNegativeButton(
-				getResources().getString(android.R.string.no),
-				new DialogInterface.OnClickListener() {
-					@Override
-					public void onClick(DialogInterface dialog, int which) {
-
-					}
-				});
-
-		AlertDialog alert = builder.create();
-
-		alert.show();
-	}*/
 
 	private final class ItemActionMode implements ActionMode.Callback {
 		int id;
