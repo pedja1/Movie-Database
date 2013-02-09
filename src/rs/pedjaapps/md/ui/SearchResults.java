@@ -95,21 +95,21 @@ public class SearchResults extends Activity {
 	private void handleIntent(Intent intent) {
 		SearchRecentSuggestions suggestions = new SearchRecentSuggestions(this,SuggestionProvider.AUTHORITY, SuggestionProvider.MODE);
 		if (Intent.ACTION_SEARCH.equals(intent.getAction())) {
-		    String query = intent.getStringExtra(SearchManager.QUERY).replaceAll(" ", "%20");
+		    String query = intent.getStringExtra(SearchManager.QUERY);
 		    Bundle appData = getIntent().getBundleExtra(SearchManager.APP_DATA);
 			if (appData != null) {
 			    listName = appData.getString("listName");
-			    System.out.println(listName+"test");
+			    
 			}
 		
 			suggestions.saveRecentQuery(query, null);
-		    new TitleSearchParser().execute(new String[] {query});
+		    new TitleSearchParser().execute(new String[] {query.replaceAll(" ", "%20")});
 		    }
 		else{
 			listName = getIntent().getExtras().getString("listName");
-			String query = getIntent().getExtras().getString("query").replaceAll(" ", "%20");
+			String query = getIntent().getExtras().getString("query");
 			suggestions.saveRecentQuery(query, null);
-			new TitleSearchParser().execute(new String[] {query});
+			new TitleSearchParser().execute(new String[] {query.replaceAll(" ", "%20")});
 		}
 		
 	}
