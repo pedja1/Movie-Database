@@ -316,7 +316,7 @@ public class DatabaseHandler extends SQLiteOpenHelper
 	
 	
 	
-	public boolean itemExists(String table, String movieName) {
+	public boolean movieExists(String table, String movieName) {
     	SQLiteDatabase db = this.getReadableDatabase();
 
         Cursor cursor = db.query(table, new String[] { filds[0],

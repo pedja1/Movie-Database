@@ -237,12 +237,18 @@ public class SearchResults extends Activity {
 					directors = dirB.toString();
 				}
 					
-				String res = DownloadFromUrl(poster, posterFile);
+				
 					DatabaseHandler db = new DatabaseHandler(SearchResults.this);
+					if(db.movieExists(listName, title)==false){
+					String res = DownloadFromUrl(poster, posterFile);
 					db.addMovie(new MoviesDatabaseEntry(title, runtime, rating, genres, type,
 							lang, posterFile, url, directors, actors, plot, year, country, date), listName);
-				
-				return res;
+						return res;
+				    }
+					else{
+						return "Movie Already Exists In This List";
+					}
+			//	return res;
 			} catch (ClientProtocolException e) {
 				return e.getMessage();
 			} catch (IOException e) {
