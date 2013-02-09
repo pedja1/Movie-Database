@@ -1,17 +1,27 @@
 package rs.pedjaapps.md.entries;
 
-public final class MoviesEntry
-{
-
+public final class MoviesEntry {
 
 	private final String title;
-    private final int year;
-    private final double rating;
-    private final String image;
-    private final String genres;
-    private final String actors;
-    
-    
+	private final int year;
+	private final double rating;
+	private final String image;
+	private final String genres;
+	private final String actors;
+	private final int date;
+
+	public MoviesEntry(String title, int year, double rating, String image,
+			String genres, String actors, int date) {
+
+		this.title = title;
+		this.year = year;
+		this.rating = rating;
+		this.image = image;
+		this.genres = genres;
+		this.actors = actors;
+		this.date = date;
+	}
+
 	public String getTitle() {
 		return title;
 	}
@@ -36,17 +46,8 @@ public final class MoviesEntry
 		return actors;
 	}
 
-	public MoviesEntry(String title, int year, double rating, String image,
-			String genres, String actors) {
-		super();
-		this.title = title;
-		this.year = year;
-		this.rating = rating;
-		this.image = image;
-		this.genres = genres;
-		this.actors = actors;
+	public int getDate() {
+		return date;
 	}
-
-	
 
 }

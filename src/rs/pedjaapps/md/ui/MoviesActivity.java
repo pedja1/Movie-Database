@@ -6,10 +6,12 @@ import android.os.*;
 import android.preference.*;
 import android.view.*;
 import android.widget.*;
+import android.widget.SearchView.OnQueryTextListener;
 import android.widget.AdapterView.*;
 
 import com.google.ads.*;
 import java.util.*;
+
 import rs.pedjaapps.md.entries.*;
 import rs.pedjaapps.md.helpers.*;
 
@@ -61,7 +63,8 @@ public class MoviesActivity extends Activity {
 		setContentView(R.layout.activity_list);
 		
 		Intent intent = getIntent();
-		listName ="watched";// intent.getExtras().getString("name");
+		listName = intent.getExtras().getString("listName");
+		
 		db = new DatabaseHandler(this);
 		//fan = (FanView) findViewById(R.id.fan_view);
 		//fan.setViews(R.layout.activity_list, R.layout.side_list);
@@ -77,7 +80,23 @@ public class MoviesActivity extends Activity {
 	        searchView.setQueryHint("Add new Movie");
 	        searchView.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));
 	        searchView.setIconifiedByDefault(false);
-	        
+	        searchView.setOnQueryTextListener(new OnQueryTextListener() {
+
+	    	    @Override
+	    	    public boolean onQueryTextSubmit(String query) {
+	    	    	Intent intent = new Intent(MoviesActivity.this, SearchResults.class);
+	    			intent.putExtra("query", query);
+	    	    	intent.putExtra("listName", listName);
+	    			startActivity(intent);
+	    	        return true;
+	    	    }
+
+	    	    @Override
+	    	    public boolean onQueryTextChange(String newText) {
+	    	        
+	    	        return false;
+	    	    }
+	    	});
 		ImageView plus = (ImageView)findViewById(R.id.action_plus);
 		plus.setImageResource(isLight ? R.drawable.search_lite : R.drawable.search_dark);
 		
@@ -162,17 +181,72 @@ public class MoviesActivity extends Activity {
 		List<MoviesDatabaseEntry> dbEntry = db.getAllMovies(listName);
 		for (MoviesDatabaseEntry e : dbEntry) {
 			entries.add(new MoviesEntry(e.get_title(), e.get_year(), e
-					.get_rating(), e.get_poster(), e.get_genres(), e.get_actors()));
+					.get_rating(), e.get_poster(), e.get_genres(), e.get_actors(), e.get_date()));
 		}
 	//	entries.add(new MoviesEntry("Lost", 2006, 8.4,
 			//	"", "Action, Sci_Fi", "Actor 1, Actor 2"));
+		Collections.sort(entries, new SortByNameDescending()); 
 		return entries;
 	}
 
 	
-
+	static class SortByRatingAscending implements Comparator<MoviesEntry>{
+		@Override
+		public int compare(MoviesEntry p1, MoviesEntry p2) {
+	        if (p1.getRating() < p2.getRating()) return -1;
+	        if (p1.getRating() > p2.getRating()) return 1;
+	        return 0;
+	    }   
+		 
+		}
+	static class SortByRatingDescending implements Comparator<MoviesEntry>{
+		@Override
+		public int compare(MoviesEntry p1, MoviesEntry p2) {
+	        if (p1.getRating() < p2.getRating()) return 1;
+	        if (p1.getRating() > p2.getRating()) return -1;
+	        return 0;
+	    }   
+		 
+		}
 	
+	static class SortByDateAscending implements Comparator<MoviesEntry>{
+		@Override
+		public int compare(MoviesEntry p1, MoviesEntry p2) {
+	        if (p1.getDate() < p2.getDate()) return -1;
+	        if (p1.getDate() > p2.getDate()) return 1;
+	        return 0;
+	    }   
+		 
+		}
+	static class SortByDateDescending implements Comparator<MoviesEntry>{
+		@Override
+		public int compare(MoviesEntry p1, MoviesEntry p2) {
+	        if (p1.getDate() < p2.getDate()) return 1;
+	        if (p1.getDate() > p2.getDate()) return -1;
+	        return 0;
+	    }   
+		 
+		}
 
+	static class SortByNameAscending implements Comparator<MoviesEntry>{
+		@Override
+		public int compare(MoviesEntry s1, MoviesEntry s2) {
+		    String sub1 = s1.getTitle();
+		    String sub2 = s2.getTitle();
+		    return sub1.compareTo(sub2);
+		  } 
+		 
+		}
+	static class SortByNameDescending implements Comparator<MoviesEntry>{
+		@Override
+		public int compare(MoviesEntry s1, MoviesEntry s2) {
+		    String sub1 = s1.getTitle();
+		    String sub2 = s2.getTitle();
+		    return sub2.compareTo(sub1);
+		  } 
+		 
+		}
+	
 	@Override
 	public void onRestoreInstanceState(Bundle savedInstanceState) {
 		// Restore the previously serialized current dropdown position.
@@ -227,7 +301,7 @@ public class MoviesActivity extends Activity {
 
 		if (resultCode == RESULT_OK) {
 			if (requestCode ==ADD_ITEM ) {
-				addItem(data);
+				//addItem(data);
 				System.out.println("add");
 			}
 			
@@ -243,7 +317,8 @@ public class MoviesActivity extends Activity {
 								"rating"), data.getExtras().getString(
 										"image"), data.getExtras().getString(
 												"genres"), data.getExtras().getString(
-														"actors")));
+														"actors"), data.getExtras().getInt(
+																"date")));
 		moviesAdapter.notifyDataSetChanged();
 		setUI();
 		
@@ -385,6 +460,16 @@ public class MoviesActivity extends Activity {
 
 		alert.show();
 	}
+	
+	@Override
+	public boolean onSearchRequested() {
+	     Bundle appData = new Bundle();
+	     appData.putString("listName", listName);
+	     startSearch(null, false, appData, false);
+	     //System.out.println(listName);
+		
+	     return true;
+	 }
 	
 	
 	

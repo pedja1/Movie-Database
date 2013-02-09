@@ -12,13 +12,13 @@ public class DatabaseHandler extends SQLiteOpenHelper
 
     // All Static variables
     // Database Version
-    private static final int DATABASE_VERSION = 7;
+    private static final int DATABASE_VERSION = 8;
 
     // Database Name
     private static final String DATABASE_NAME = "MDb.db";
 
     // table names
-	private static final String TABLE_WATCHED = "watched";
+	private static final String TABLE_WATCHED = "favorites";
 	private static final String TABLE_WATCHLIST = "watchlist";
     //private static final String TABLE_ITEM = "item_table";
     // Table Columns names

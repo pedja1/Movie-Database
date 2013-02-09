@@ -32,6 +32,7 @@ public class SearchResults extends Activity {
 	ListView searchListView;
 	SearchAdapter searchAdapter;
 	List<SearchListEntry> entry;
+	String listName;
 	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -92,9 +93,21 @@ public class SearchResults extends Activity {
 	private void handleIntent(Intent intent) {
 		if (Intent.ACTION_SEARCH.equals(intent.getAction())) {
 		    String query = intent.getStringExtra(SearchManager.QUERY).replaceAll(" ", "%20");
-		    
+		    Bundle appData = getIntent().getBundleExtra(SearchManager.APP_DATA);
+			if (appData != null) {
+			    listName = appData.getString("listName");
+			    System.out.println(listName+"test");
+			}
+			System.out.println(listName+"test");
 		    new TitleSearchParser().execute(new String[] {query});
 		    }
+		else{
+			listName = getIntent().getExtras().getString("listName");
+			String query = getIntent().getExtras().getString("query").replaceAll(" ", "%20");
+			System.out.println(listName+query+"test");
+			new TitleSearchParser().execute(new String[] {query});
+		}
+		
 	}
 	
 	public class DownloadMovieInfo extends AsyncTask<String, Void, String>
@@ -223,7 +236,7 @@ public class SearchResults extends Activity {
 				String res = DownloadFromUrl(poster, posterFile);
 					DatabaseHandler db = new DatabaseHandler(SearchResults.this);
 					db.addMovie(new MoviesDatabaseEntry(title, runtime, rating, genres, type,
-							lang, posterFile, url, directors, actors, plot, year, country, date), "watched");
+							lang, posterFile, url, directors, actors, plot, year, country, date), listName);
 				
 				return res;
 			} catch (ClientProtocolException e) {

@@ -2,21 +2,16 @@ package rs.pedjaapps.md.ui;
 
 import android.app.*;
 import android.content.*;
-import android.graphics.*;
 import android.os.*;
 import android.preference.*;
-import android.view.*;
-import android.view.View.*;
-import android.widget.*;
-import android.widget.AdapterView.*;
-import com.google.ads.*;
-import java.text.*;
-import java.util.*;
-import rs.pedjaapps.md.*;
-import rs.pedjaapps.md.entries.*;
-import rs.pedjaapps.md.helpers.*;
-
+import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.animation.Animation;
+import android.view.animation.Animation.AnimationListener;
+import android.view.animation.AnimationUtils;
+import android.widget.RelativeLayout;
+
+import com.google.ads.*;
 import rs.pedjaapps.md.R;
 
 public class Lists extends Activity {
@@ -25,6 +20,8 @@ public class Lists extends Activity {
 	boolean isLight;
 	String theme;
 	SharedPreferences sharedPrefs;
+	RelativeLayout watch;
+	RelativeLayout fav;
 	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -47,7 +44,33 @@ public class Lists extends Activity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.lists);
 		
+		watch = (RelativeLayout)findViewById(R.id.watch);
+		fav = (RelativeLayout)findViewById(R.id.fav);
+		Animation l2r = AnimationUtils.loadAnimation(this, R.anim.animation_l2r);
+		Animation r2l = AnimationUtils.loadAnimation(this, R.anim.animation_r2l);
+		watch.startAnimation(l2r);
+		fav.startAnimation(r2l);
+		
+		watch.setOnClickListener(new OnClickListener(){
 
+			@Override
+			public void onClick(View arg0) {
+				Intent i = new Intent(Lists.this, MoviesActivity.class);
+				i.putExtra("listName", "watchlist");
+				startActivity(i);
+			}
+			
+		});
+		fav.setOnClickListener(new OnClickListener(){
+
+			@Override
+			public void onClick(View arg0) {
+				Intent i = new Intent(Lists.this, MoviesActivity.class);
+				i.putExtra("listName", "favorites");
+				startActivity(i);
+			}
+			
+		});
 		
 		boolean ads = sharedPrefs.getBoolean("ads", true);
 		if (ads == true) {
@@ -57,4 +80,36 @@ public class Lists extends Activity {
 
 		
 }
+	@Override
+	public void onBackPressed() {
+		Animation l2r = AnimationUtils.loadAnimation(this, R.anim.animation_l2r_end);
+		Animation r2l = AnimationUtils.loadAnimation(this, R.anim.animation_r2l_end);
+		
+		watch.startAnimation(l2r);
+		fav.startAnimation(r2l);
+		r2l.setAnimationListener(new AnimationListener(){
+
+			@Override
+			public void onAnimationEnd(Animation arg0) {
+				watch.setVisibility(View.GONE);
+				fav.setVisibility(View.GONE);
+				finish();
+				
+			}
+
+			@Override
+			public void onAnimationRepeat(Animation arg0) {
+				// TODO Auto-generated method stub
+				
+			}
+
+			@Override
+			public void onAnimationStart(Animation arg0) {
+				// TODO Auto-generated method stub
+				
+			}
+			
+		});
+	}
+	
 }
