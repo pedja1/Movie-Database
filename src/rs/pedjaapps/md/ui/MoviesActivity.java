@@ -367,7 +367,7 @@ public class MoviesActivity extends Activity
 		sort.add(1, 6, 4, "By Ratings Ascending");
 		sort.add(1, 7, 5, "By Ratings Descending");
 		sort.add(1, 8, 6, "List Order");
-		menu.add(0, 9, 4, "Filter");
+		menu.add(0, 10, 4, "Filter");
    
 		
 		return true;
@@ -404,7 +404,7 @@ public class MoviesActivity extends Activity
 				Intent i = new Intent(this, Preferences.class);
 	            startActivity(i);
 				break;
-			case 9:
+			case 10:
 				filterDialog();
 				break;
 			case android.R.id.home:
