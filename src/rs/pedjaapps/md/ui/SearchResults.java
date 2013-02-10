@@ -96,21 +96,24 @@ public class SearchResults extends Activity {
 		SearchRecentSuggestions suggestions = new SearchRecentSuggestions(this,SuggestionProvider.AUTHORITY, SuggestionProvider.MODE);
 		if (Intent.ACTION_SEARCH.equals(intent.getAction())) {
 		    String query = intent.getStringExtra(SearchManager.QUERY);
-		    Bundle appData = getIntent().getBundleExtra(SearchManager.APP_DATA);
+			listName = sharedPrefs.getString("list", "favorites");
+		 /*   Bundle appData = getIntent().getBundleExtra(SearchManager.APP_DATA);
 			if (appData != null) {
 			    listName = appData.getString("listName");
-			    
 			}
+			else{
+				listName = getIntent().getExtras().getString("listName");
+			}*/
 		
 			suggestions.saveRecentQuery(query, null);
 		    new TitleSearchParser().execute(new String[] {query.replaceAll(" ", "%20")});
 		    }
-		else{
+	/*	else{
 			listName = getIntent().getExtras().getString("listName");
 			String query = getIntent().getExtras().getString("query");
 			suggestions.saveRecentQuery(query, null);
 			new TitleSearchParser().execute(new String[] {query.replaceAll(" ", "%20")});
-		}
+		}*/
 		
 	}
 	
@@ -147,8 +150,10 @@ public class SearchResults extends Activity {
 				result = sb.toString();
 				
 					JSONObject jO = new JSONObject(result);
-					
-					String title = jO.getString("title");
+					String title = "";
+					if(jO.has("title")){
+					title = jO.getString("title");
+					}
 					String runtime = "";
 					if(jO.has("runtime")){
 					runtime = jO.getJSONArray("runtime").getString(0);
@@ -239,7 +244,9 @@ public class SearchResults extends Activity {
 					
 				
 					DatabaseHandler db = new DatabaseHandler(SearchResults.this);
-					if(db.movieExists(listName, title)==false){
+					Log.e("error",listName);
+				boolean exists = db.movieExists(listName, title);
+					if(exists==false){
 					String res = DownloadFromUrl(poster, posterFile);
 					db.addMovie(new MoviesDatabaseEntry(title, runtime, rating, genres, type,
 							lang, posterFile, url, directors, actors, plot, year, country, date), listName);

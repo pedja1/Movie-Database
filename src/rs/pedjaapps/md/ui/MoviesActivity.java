@@ -5,6 +5,7 @@ import android.content.*;
 import android.net.*;
 import android.os.*;
 import android.preference.*;
+import android.provider.*;
 import android.view.*;
 import android.widget.*;
 import android.widget.AdapterView.*;
@@ -14,6 +15,7 @@ import java.util.*;
 import rs.pedjaapps.md.*;
 import rs.pedjaapps.md.entries.*;
 import rs.pedjaapps.md.helpers.*;
+import rs.pedjaapps.md.providers.*;
 
 public class MoviesActivity extends Activity
 {
@@ -73,11 +75,13 @@ public class MoviesActivity extends Activity
 		Intent intent = getIntent();
 		listName = intent.getExtras().getString("listName");
 
+		editor.putString("list", listName);
+		editor.apply();
 		db = new DatabaseHandler(this);
 		//fan = (FanView) findViewById(R.id.fan_view);
 		//fan.setViews(R.layout.activity_list, R.layout.side_list);
 
-
+       // db.movieExists(listName, "The Hunger Games: Catching Fire");
 
 		actionBar = getActionBar();
 		actionBar.setDisplayHomeAsUpEnabled(true);
@@ -89,7 +93,7 @@ public class MoviesActivity extends Activity
 		searchView.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));
 		searchView.setIconifiedByDefault(false);
 		searchView.setQueryRefinementEnabled(true);
-		searchView.setOnQueryTextListener(new OnQueryTextListener() {
+	/*	searchView.setOnQueryTextListener(new OnQueryTextListener() {
 
 	    	    @Override
 	    	    public boolean onQueryTextSubmit(String query)
@@ -107,7 +111,10 @@ public class MoviesActivity extends Activity
 
 	    	        return false;
 	    	    }
-	    	});
+	    	});*/
+			
+		
+		
 		ImageView plus = (ImageView)findViewById(R.id.action_plus);
 		plus.setImageResource(isLight ? R.drawable.search_lite : R.drawable.search_dark);
 
@@ -499,8 +506,9 @@ public class MoviesActivity extends Activity
 
 					db.deleteMovie(entry, listName);
 
-					moviesAdapter.remove(moviesAdapter.getItem(id));
-					moviesAdapter.notifyDataSetChanged();
+					//moviesAdapter.remove(moviesAdapter.getItem(id));
+					//moviesAdapter.notifyDataSetChanged();
+					recreateList(sortMode);
 					setUI();
 
 				}
@@ -521,7 +529,7 @@ public class MoviesActivity extends Activity
 		alert.show();
 	}
 
-	@Override
+/*	@Override
 	public boolean onSearchRequested()
 	{
 		Bundle appData = new Bundle();
@@ -530,7 +538,7 @@ public class MoviesActivity extends Activity
 		//System.out.println(listName);
 
 		return true;
-	}
+	}*/
 
 
 
