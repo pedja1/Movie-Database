@@ -223,8 +223,7 @@ public class DatabaseHandler extends SQLiteOpenHelper
 	
 	public MoviesDatabaseEntry getMovieByIndex(String table, int id)
 	{
-        List<MoviesDatabaseEntry> lists = new ArrayList<MoviesDatabaseEntry>();
-        // Select All Query
+       // Select All Query
         String selectQuery = "SELECT * FROM " +table+" LIMIT 1 OFFSET "+id;
 
         SQLiteDatabase db = this.getWritableDatabase();
@@ -263,11 +262,47 @@ public class DatabaseHandler extends SQLiteOpenHelper
         return list;
     }
 	
-	public List<MoviesDatabaseEntry> getAllMovies(String table)
+	public List<MoviesDatabaseEntry> getAllMovies(String table, String title, String actor, int year, String genre, String director, double from, double to)
 	{
         List<MoviesDatabaseEntry> lists = new ArrayList<MoviesDatabaseEntry>();
         // Select All Query
-        String selectQuery = "SELECT  * FROM " + table;
+        StringBuilder builder = new StringBuilder();
+        builder.append("SELECT  * FROM " + table + " WHERE");
+        
+        if(title.length()!=0){
+        	builder.append(" title LIKE \"%"+title+"%\"");
+        }
+        else{
+        	builder.append(" title LIKE \"%\"");
+        }
+        if(actor.length()!=0){
+        	builder.append(" and actors LIKE \"%"+actor+"%\"");
+        }
+        else{
+        	builder.append(" and actors LIKE \"%\"");
+        }
+       
+        if(year!=0){
+        	builder.append(" and year = "+year);
+        }
+        else{
+        	builder.append(" and year LIKE \"%\"");
+        }
+        builder.append(" and rating >= "+from);
+        builder.append(" and rating <= "+to);
+        if(genre.length()!=0){
+        	builder.append(" and genres LIKE \"%"+genre+"%\"");
+        }
+        else{
+        	builder.append(" and genres LIKE \"%\"");
+        }
+        if(director.length()!=0){
+        	builder.append(" and director LIKE \"%"+director+"%\"");
+        }
+        else{
+        	builder.append(" and director LIKE \"%\"");
+        }
+        String selectQuery = builder.toString();//"SELECT  * FROM " + table;
 
         SQLiteDatabase db = this.getWritableDatabase();
         Cursor cursor = db.rawQuery(selectQuery, null);

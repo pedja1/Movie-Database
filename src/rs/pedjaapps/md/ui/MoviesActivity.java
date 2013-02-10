@@ -5,17 +5,15 @@ import android.content.*;
 import android.net.*;
 import android.os.*;
 import android.preference.*;
-import android.provider.*;
 import android.view.*;
 import android.widget.*;
 import android.widget.AdapterView.*;
-import android.widget.SearchView.*;
 import com.google.ads.*;
 import java.util.*;
+
 import rs.pedjaapps.md.*;
 import rs.pedjaapps.md.entries.*;
 import rs.pedjaapps.md.helpers.*;
-import rs.pedjaapps.md.providers.*;
 
 public class MoviesActivity extends Activity
 {
@@ -26,7 +24,6 @@ public class MoviesActivity extends Activity
 
 	private MoviesAdapter moviesAdapter;
 	private ListView moviesListView;
-	private static final int ADD_ITEM = 0;
 	String listName;
 
 	TextView tv1;
@@ -44,6 +41,14 @@ public class MoviesActivity extends Activity
 	int sortMode = 0;
 	SharedPreferences prefs;
 	SharedPreferences.Editor editor;
+	String title = "";
+	String actor = "";
+	int year = 0;
+	String genres = "";
+	String director = "";
+	double from = 0.0;
+	double to = 10.0;
+	
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState)
@@ -67,7 +72,14 @@ public class MoviesActivity extends Activity
 			setTheme(android.R.style.Theme_Holo_Light_DarkActionBar);
 			isLight = true;
 		}
+		title = prefs.getString("title", title);
+		actor = prefs.getString("actor", actor);
 
+		year = prefs.getInt("year", year);
+		genres = prefs.getString("genres", genres);
+		director = prefs.getString("director", director);
+		from = prefs.getFloat("from", (float) from);
+		to = prefs.getFloat("to", (float) to);
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_list);
 
@@ -203,16 +215,17 @@ public class MoviesActivity extends Activity
 		super.onResume();
 	}
 
-
+	
 	private List<MoviesEntry> getMoviesEntries()
 	{
 
 		entries = new ArrayList<MoviesEntry>();
-		List<MoviesDatabaseEntry> dbEntry = db.getAllMovies(listName);
+		List<MoviesDatabaseEntry> dbEntry = db.getAllMovies(listName, title, actor, year, genres, director, from, to);
 		for (MoviesDatabaseEntry e : dbEntry)
 		{
 			entries.add(new MoviesEntry(e.get_title(), e.get_year(), e
-										.get_rating(), e.get_poster(), e.get_genres(), e.get_actors(), e.get_date()));
+					.get_rating(), e.get_poster(), e.get_genres(), e.get_actors(), e.get_date()));
+			
 		}
 		switch (sortMode)
 		{
@@ -354,6 +367,9 @@ public class MoviesActivity extends Activity
 		sort.add(1, 6, 4, "By Ratings Ascending");
 		sort.add(1, 7, 5, "By Ratings Descending");
 		sort.add(1, 8, 6, "List Order");
+		menu.add(0, 9, 4, "Filter");
+   
+		
 		return true;
 	}
 
@@ -388,6 +404,9 @@ public class MoviesActivity extends Activity
 				Intent i = new Intent(this, Preferences.class);
 	            startActivity(i);
 				break;
+			case 9:
+				filterDialog();
+				break;
 			case android.R.id.home:
 	            // app icon in action bar clicked; go home
 	            Intent intent = new Intent(this, Lists.class);
@@ -400,6 +419,58 @@ public class MoviesActivity extends Activity
 
 	}
 
+	private void filterDialog(){
+		AlertDialog.Builder builder = new AlertDialog.Builder(
+				MoviesActivity.this);
+
+		builder.setTitle("Filter");
+		LayoutInflater inflater = (LayoutInflater) MoviesActivity.this
+				.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+		final View view = inflater.inflate(R.layout.filter_layout, null);
+		((EditText)view.findViewById(R.id.title)).setText(title);
+		((EditText)view.findViewById(R.id.actors)).setText(actor);
+		((EditText)view.findViewById(R.id.year)).setText(year+"");
+		((EditText)view.findViewById(R.id.genres)).setText(genres);
+		((EditText)view.findViewById(R.id.director)).setText(director);
+		((EditText)view.findViewById(R.id.from)).setText(from+"");
+		((EditText)view.findViewById(R.id.to)).setText(to+"");
+		builder.setPositiveButton("Filter", new DialogInterface.OnClickListener() {
+			@Override
+			public void onClick(DialogInterface dialog, int which)
+			{
+			title = ((EditText)view.findViewById(R.id.title)).getText().toString();
+			actor = ((EditText)view.findViewById(R.id.actors)).getText().toString();
+			year = Integer.parseInt(((EditText)view.findViewById(R.id.year)).getText().toString());
+			genres = ((EditText)view.findViewById(R.id.genres)).getText().toString();
+			director = ((EditText)view.findViewById(R.id.director)).getText().toString();
+			from = Double.parseDouble(((EditText)view.findViewById(R.id.from)).getText().toString());
+			to = Double.parseDouble(((EditText)view.findViewById(R.id.to)).getText().toString());
+			editor.putString("title", title);	
+			editor.putString("actor", actor);
+			editor.putInt("year", year);
+			editor.putString("genres", genres);
+			editor.putString("director", director);
+			editor.putFloat("from", (float) from);
+			editor.putFloat("to", (float) to);
+			editor.apply();
+			recreateList(sortMode);
+			}
+			
+		});
+		builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+			@Override
+			public void onClick(DialogInterface dialog, int which)
+			{
+				
+			}
+			
+		});
+	builder.setView(view);
+	AlertDialog alert = builder.create();
+	alert.show();
+		
+	}
+	
 	private void recreateList(int sortMode)
 	{
 		this.sortMode = sortMode;
