@@ -168,12 +168,10 @@ public class MoviesActivity extends Activity
 				public void onItemClick(AdapterView<?> arg0, View arg1, int position,
 										long arg3)
 				{
-					
-					
-					Uri uri = Uri.parse(db.getMovieByName(listName, entries.get(position).getTitle()).get_url());
-					Intent intent = new Intent(Intent.ACTION_VIEW, uri);
-					startActivity(intent);
-
+					Intent i = new Intent(MoviesActivity.this, MovieDetails.class);
+					i.putExtra("title", entries.get(position).getTitle());
+					i.putExtra("table", listName);
+					startActivity(i);
 
 				}
 

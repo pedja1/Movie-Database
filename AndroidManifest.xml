@@ -33,6 +33,14 @@
         </activity>
         
         <activity
+            android:name=".ui.MovieDetails"
+            android:label="@string/app_name"
+            android:theme="@android:style/Theme.Holo.Light"
+            android:uiOptions="splitActionBarWhenNarrow" >
+
+        </activity>
+        
+        <activity
             android:name=".ui.Lists"
             android:label="@string/app_name"
             android:theme="@android:style/Theme.Holo.Light" >
