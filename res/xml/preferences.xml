@@ -26,5 +26,14 @@
                 android:dialogTitle="@string/select_theme" />
 
     </PreferenceCategory>
+	
+	<PreferenceScreen
+		android:title="Powered By"
+		android:summary="imdbapi.org">
+
+		<intent android:action="android.intent.action.VIEW"
+            android:data="http://imdbapi.org" />
+		
+	</PreferenceScreen>
 
 </PreferenceScreen>

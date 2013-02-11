@@ -368,7 +368,7 @@ public class MoviesActivity extends Activity
 		sort.add(1, 7, 5, "By Ratings Descending");
 		sort.add(1, 8, 6, "List Order");
 		menu.add(0, 10, 4, "Filter");
-   
+        menu.add(0, 11, 5, "List Info");
 		
 		return true;
 	}
@@ -406,6 +406,9 @@ public class MoviesActivity extends Activity
 				break;
 			case 10:
 				filterDialog();
+				break;
+			case 11:
+				infoDialog();
 				break;
 			case android.R.id.home:
 	            // app icon in action bar clicked; go home
@@ -469,6 +472,26 @@ public class MoviesActivity extends Activity
 	AlertDialog alert = builder.create();
 	alert.show();
 		
+	}
+	
+	private void infoDialog(){
+		AlertDialog.Builder builder = new AlertDialog.Builder(
+			MoviesActivity.this);
+
+		builder.setTitle("List Info");
+	    builder.setMessage("List: " + listName+"\nNumber of Movies: "+db.getMoviesCount(listName));
+		builder.setNegativeButton("Close", new DialogInterface.OnClickListener() {
+				@Override
+				public void onClick(DialogInterface dialog, int which)
+				{
+
+				}
+
+			});
+		
+		AlertDialog alert = builder.create();
+		alert.show();
+
 	}
 	
 	private void recreateList(int sortMode)

@@ -297,7 +297,7 @@ public class SearchResults extends Activity {
 			entry = new ArrayList<SearchListEntry>();
 			//DatabaseHandler db = new DatabaseHandler(context);
 			DefaultHttpClient   httpclient = new DefaultHttpClient(new BasicHttpParams());
-			HttpGet httpget = new HttpGet("http://imdbapi.org/?title="+args[0]+"&type=json&plot=none&episode=0&limit=10&yg=0&mt=none&lang=en-US&business=0&tech=0");
+			HttpGet httpget = new HttpGet("http://imdbapi.org/?title="+args[0]+"&type=json&plot=simple&episode=0&limit=10&yg=0&mt=none&lang=en-US&business=0&tech=0");
 			// Depends on your web service
 			//httppost.setHeader("Content-type", "application/json");
 
@@ -326,7 +326,8 @@ public class SearchResults extends Activity {
 					String title = jO.getString("title");
 					String id = jO.getString("imdb_id");
 					int year = jO.getInt("year");
-					entry.add(new SearchListEntry(title, id, year));
+					String plot = jO.getString("plot_simple");
+					entry.add(new SearchListEntry(title, id, year, plot));
 					System.out.println(title+id+year);
 				}
 				

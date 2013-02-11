@@ -401,6 +401,17 @@ public class DatabaseHandler extends SQLiteOpenHelper
 						 new String[] { String.valueOf(position) });
         }
 	
+	public int getMoviesCount(String table)
+	{
+        String countQuery = "SELECT  * FROM " + table;
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor cursor = db.rawQuery(countQuery, null);
+       int count = cursor.getCount();
+	   cursor.close();
+        db.close();
+        // return count
+        return count;
+    }
 
 }
 
