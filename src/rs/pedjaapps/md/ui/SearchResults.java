@@ -35,6 +35,8 @@ public class SearchResults extends Activity {
 	SearchAdapter searchAdapter;
 	List<SearchListEntry> entry;
 	String listName;
+	String extStorage = Environment.getExternalStorageDirectory().toString();
+	
 	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -123,13 +125,9 @@ public class SearchResults extends Activity {
 		@Override
 		protected String doInBackground(String... args)
 		{
-			List<SearchListEntry> entry = new ArrayList<SearchListEntry>();
-			//DatabaseHandler db = new DatabaseHandler(context);
 			DefaultHttpClient   httpclient = new DefaultHttpClient(new BasicHttpParams());
 			HttpGet httpget = new HttpGet("http://imdbapi.org/?id="+args[0]+"&type=json&plot=simple&episode=0&lang=en-US&aka=simple&release=simple&business=0&tech=0");
-			// Depends on your web service
-			//httppost.setHeader("Content-type", "application/json");
-
+			
 			InputStream inputStream = null;
 			String result = "";
 			
@@ -138,7 +136,6 @@ public class SearchResults extends Activity {
 				HttpEntity entity = response.getEntity();
 
 				inputStream = entity.getContent();
-				// json is UTF-8 by default i beleive
 				BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream, "iso-8859-1"), 8);
 				StringBuilder sb = new StringBuilder();
 
@@ -192,7 +189,7 @@ public class SearchResults extends Activity {
 					String posterFile = "";
 				    if(jO.has("poster")){
 					poster = jO.getString("poster");
-						posterFile = "/sdcard/MDb/posters"+poster.substring(poster.lastIndexOf("/"));
+						posterFile = extStorage+"/MDb/posters"+poster.substring(poster.lastIndexOf("/"));
 					}
 					int year = 0;
 				    if(jO.has("year")){
@@ -328,17 +325,14 @@ public class SearchResults extends Activity {
 					int year = jO.getInt("year");
 					String plot = jO.getString("plot_simple");
 					entry.add(new SearchListEntry(title, id, year, plot));
-					System.out.println(title+id+year);
+					
 				}
 				
 			} catch (ClientProtocolException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			} catch (IOException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			} catch (JSONException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}           
 			
@@ -364,9 +358,9 @@ public class SearchResults extends Activity {
 
 	public String DownloadFromUrl(String imageURL, String fileName) {  //this is the downloader method
         try {
-        	File ktDir = new File(Environment.getExternalStorageDirectory() + "/MDb/posters");
-		      if(ktDir.exists()==false){
-		      ktDir.mkdir();
+        	File mdbDir = new File(Environment.getExternalStorageDirectory() + "/MDb/posters");
+		      if(mdbDir.exists()==false){
+		      mdbDir.mkdirs();
 		      }
                 URL url = new URL(imageURL);
                 File file = new File(fileName);

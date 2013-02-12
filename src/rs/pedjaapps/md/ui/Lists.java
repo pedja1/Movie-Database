@@ -76,9 +76,8 @@ public class Lists extends Activity {
 			AdView adView = (AdView) findViewById(R.id.ad);
 			adView.loadAd(new AdRequest());
 		}
-        //new GetImdbWatchlist().execute();
-	System.out.println(new ReadImdbWatchlist().read());
 		
+		System.out.println(Environment.getExternalStorageDirectory());
 }
 	@Override
 	public void onBackPressed() {
@@ -126,6 +125,7 @@ public class Lists extends Activity {
 		menu.add(0,0,0,"Preferences")
 			.setIcon(isLight ? R.drawable.settings_light : R.drawable.settings_dark)
 			.setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM);
+		menu.add(0,1,1,"Import Watchlist From IMDb");
 		return true;
 	}
 
@@ -137,6 +137,10 @@ public class Lists extends Activity {
 	            Intent intent = new Intent(this, Preferences.class);
 	            startActivity(intent);
 	            break;
+			case 1:
+				ReadImdbWatchlist read = new ReadImdbWatchlist(this);
+				read.addMovies();
+				break;
 		}
 
 		return super.onOptionsItemSelected(item);
