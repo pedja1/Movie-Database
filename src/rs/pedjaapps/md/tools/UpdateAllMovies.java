@@ -2,8 +2,6 @@ package rs.pedjaapps.md.tools;
 
 import android.app.ProgressDialog;
 import android.content.Context;
-import android.database.*;
-import android.database.sqlite.*;
 import android.os.AsyncTask;
 import android.os.Environment;
 import android.util.Log;
@@ -16,7 +14,6 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.io.OutputStream;
 import java.net.URL;
 import java.net.URLConnection;
 import java.util.*;
@@ -35,99 +32,42 @@ import org.json.JSONObject;
 import rs.pedjaapps.md.entries.*;
 import rs.pedjaapps.md.helpers.DatabaseHandler;
 
-public class ReadImdbWatchlist
+public class UpdateAllMovies
 {
 
-	private String errMsg = "";
-	DatabaseHandler db;
-	Context context;
-	int added = 0;
-	int error = 0;
-	int exists = 0;
-	ProgressDialog pd;
-	String extStorage = Environment.getExternalStorageDirectory().toString();
 	
-    public ReadImdbWatchlist(Context context){
+	private DatabaseHandler db;
+	private Context context;
+	private int updated = 0;
+	private int error = 0;
+	private ProgressDialog pd;
+	private String extStorage = Environment.getExternalStorageDirectory().toString();
+	
+    public UpdateAllMovies(Context context){
     	 db = new DatabaseHandler(context);
     	 this.context = context;
 	}
     
-    public void addMovies(){
-    	new DownloadMovieInfo().execute();
+    public void updateMovies(String list){
+    	new DownloadMovieInfo().execute(new String[]{list});
     }
-    
-    
-    
-	public List<String> read(){
-		List<String> ids = new ArrayList<String>();
-		
-		SQLiteDatabase db = SQLiteDatabase.openDatabase(extStorage+"/watchlist.db", null, SQLiteDatabase.OPEN_READONLY);
-	    String selectQuery = "SELECT  * FROM watchlist";
 
-        
-        
-        Cursor cursor = db.rawQuery(selectQuery, null);
-
-        // looping through all rows and adding to list
-        if (cursor.moveToFirst())
-		{
-            do {
-            	
-                ids.add(cursor.getString(1));
-            } while (cursor.moveToNext());
-        }
-
-        // return list
-        db.close();
-	    cursor.close();
-		
-		return ids;
-	}
-	
 	public class DownloadMovieInfo extends AsyncTask<String, String, String>
 	{
 
 		@Override
 		protected String doInBackground(String... args)
 		{
-			 try {
- 	            
-
- 	        
-
-			String lin;
-            Process process = Runtime.getRuntime().exec("su");
-            OutputStream stdin = process.getOutputStream();
-            InputStream stderr = process.getErrorStream();
-            InputStream stdout = process.getInputStream();
-
-            stdin.write(("cp /data/data/com.imdb.mobile/databases/watchlist* /sdcard/\n").getBytes());
-		    stdin.write(("rm /sdcard/watchlist*-journal\n").getBytes());
-		 stdin.write(("mv /sdcard/watchlist* /sdcard/watchlist.db\n").getBytes());
-			stdin.flush();
-
-            stdin.close();
-            BufferedReader brCleanUp =
-                    new BufferedReader(new InputStreamReader(stdout));
-            while ((lin = brCleanUp.readLine()) != null) {
-                Log.d("[Output]", lin);
-            }
-            brCleanUp.close();
-            brCleanUp =
-                    new BufferedReader(new InputStreamReader(stderr));
-            while ((lin = brCleanUp.readLine()) != null) {
-            	errMsg = lin;
-            	System.out.println(lin);
-            }
-            brCleanUp.close();
-			if(errMsg.length()==0 && new File(extStorage+"/watchlist.db").exists()){
-			List<String> ids = read();
-			System.out.println(ids+"test");
-			int lenght = ids.size();
+			 
+			List<MoviesDatabaseEntry> movies = db.getAllMovies(args[0], "", "", 0, "", "", 0.0, 10);
+			
+			int lenght = movies.size();
 			for(int in = 0; in<lenght; in++){
-				publishProgress("Adding: "+in+"/"+(lenght));
+				publishProgress("Updating: "+in+"/"+(lenght-1)+"\n"+movies.get(in).get_title());
+				//String murl= movies.get(in).get_url();
+				//String mid = murl.substring(murl.lastIndexOf("tt"), murl.length());
 			DefaultHttpClient   httpclient = new DefaultHttpClient(new BasicHttpParams());
-			HttpGet httpget = new HttpGet("http://imdbapi.org/?id="+ids.get(in)+"&type=json&plot=simple&episode=0&lang=en-US&aka=simple&release=simple&business=0&tech=0");
+			HttpGet httpget = new HttpGet("http://imdbapi.org/?id="+movies.get(in).get_imdb_id()+"&type=json&plot=simple&episode=0&lang=en-US&aka=simple&release=simple&business=0&tech=0");
 			InputStream inputStream = null;
 			String result = "";
 			
@@ -244,15 +184,12 @@ public class ReadImdbWatchlist
 					id = jO.getString("imdb_id");
 				}
 				
-					if(db.movieExists("watchlist", title)==false){
+					
 					DownloadFromUrl(poster, posterFile);
-					db.addMovie(new MoviesDatabaseEntry(title, runtime, rating, genres, type,
-							lang, posterFile, url, directors, actors, plot, year, country, date, 0.0, id), "watchlist");
-						added++;
-				    }
-					else{
-						exists++;
-					}
+					db.updateMovie(new MoviesDatabaseEntry(title, runtime, rating, genres, type,
+							lang, posterFile, url, directors, actors, plot, year, country, date, movies.get(in).get_ur(), id), movies.get(in).get_title(), args[0]);
+					updated++;
+				    
 			//	return res;
 			} catch (ClientProtocolException e) {
 				error++;
@@ -262,11 +199,9 @@ public class ReadImdbWatchlist
 				error++;
 			}
 			}
-			}
-			 } catch (IOException e) {
-	 	        	errMsg = e.getMessage();
-	 	        }
-			return errMsg;           
+			
+			 
+			return "";           
 			
 			
 			
@@ -276,7 +211,7 @@ public class ReadImdbWatchlist
 		protected void onPreExecute(){
 			pd = new ProgressDialog(context);
 			pd.setIndeterminate(true);
-			pd.setTitle("Adding movies to watchlist");
+			pd.setTitle("Updating movies");
 			pd.show();
 			 }
 		
@@ -288,13 +223,11 @@ public class ReadImdbWatchlist
 		protected void onPostExecute(String result)
 		{
 			pd.dismiss();
-			if(errMsg.length()!=0){
-				Toast.makeText(context, errMsg, Toast.LENGTH_LONG).show();
-			}
-			else{
-				Toast.makeText(context, "Added:"+added+" Failed:"+error+" Already Exists:"+exists, Toast.LENGTH_LONG).show();
+			
+			
+				Toast.makeText(context, "Added:"+updated+" Failed:"+error, Toast.LENGTH_LONG).show();
 				
-			}
+			
 		}
 	}
 	

@@ -129,7 +129,7 @@ public class MovieDetails extends Activity {
 				
 	            break;
 			case 1:
-			    new DownloadMovieInfo().execute(new String[]{e.get_url().substring(e.get_url().lastIndexOf("tt"), e.get_url().length()-1)});
+			    new DownloadMovieInfo().execute(new String[]{/*e.get_url().substring(e.get_url().lastIndexOf("tt"), e.get_url().length()-1)*/e.get_imdb_id()});
 			    break;
 		}
 
@@ -169,7 +169,7 @@ public class MovieDetails extends Activity {
 				else{
 					ur = Double.parseDouble(ed.getText().toString());
                     db.updateMovie(new MoviesDatabaseEntry(e.get_title(), e.get_runtime(), e.get_rating(), e.get_genres(), e.get_type(),
-														   e.get_lang(), e.get_poster(), e.get_url(), e.get_director(), e.get_actors(), e.get_plot(), e.get_year(), e.get_country(), e.get_date(), ur), e.get_title(), table);
+														   e.get_lang(), e.get_poster(), e.get_url(), e.get_director(), e.get_actors(), e.get_plot(), e.get_year(), e.get_country(), e.get_date(), ur, e.get_imdb_id()), e.get_title(), table);
 					((TextView)findViewById(R.id.usr_text)).setText(ur+"/10");
 					}
 				}
@@ -255,7 +255,7 @@ public class MovieDetails extends Activity {
 				String posterFile = "";
 				if(jO.has("poster")){
 					poster = jO.getString("poster");
-					posterFile = "/sdcard/MDb/posters"+poster.substring(poster.lastIndexOf("/"));
+					posterFile = Environment.getExternalStorageDirectory()+"/MDb/posters"+poster.substring(poster.lastIndexOf("/"));
 				}
 				int year = 0;
 				if(jO.has("year")){
@@ -305,13 +305,16 @@ public class MovieDetails extends Activity {
 					directors = dirB.toString();
 				}
 
-
+				String id = "";
+				if(jO.has("imdb_id")){
+					id = jO.getString("imdb_id");
+				}
 				
 			
 				
 					String res = DownloadFromUrl(poster, posterFile);
 					db.updateMovie(new MoviesDatabaseEntry(title, runtime, rating, genres, type,
-														lang, posterFile, url, directors, actors, plot, year, country, date, ur), e.get_title(), table);
+														lang, posterFile, url, directors, actors, plot, year, country, date, ur, id), e.get_title(), table);
 					
 				
 				

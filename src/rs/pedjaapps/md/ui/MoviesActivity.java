@@ -14,6 +14,7 @@ import java.util.*;
 import rs.pedjaapps.md.*;
 import rs.pedjaapps.md.entries.*;
 import rs.pedjaapps.md.helpers.*;
+import rs.pedjaapps.md.tools.UpdateAllMovies;
 
 public class MoviesActivity extends Activity
 {
@@ -377,6 +378,7 @@ public class MoviesActivity extends Activity
 		sort.add(1, 8, 6, "List Order");
 		menu.add(0, 10, 4, "Filter");
         menu.add(0, 11, 5, "List Info");
+        menu.add(0, 12, 6, "Update All Movies");
 		
 		return true;
 	}
@@ -417,6 +419,9 @@ public class MoviesActivity extends Activity
 				break;
 			case 11:
 				infoDialog();
+				break;
+			case 12:
+				new UpdateAllMovies(this).updateMovies(listName);
 				break;
 			case android.R.id.home:
 	            // app icon in action bar clicked; go home

@@ -238,6 +238,13 @@ public class SearchResults extends Activity {
 					}
 					directors = dirB.toString();
 				}
+				String id = "";
+				if(jO.has("imdb_id")){
+					id = jO.getString("imdb_id");
+				}
+				else{
+					
+				}
 					
 				
 					DatabaseHandler db = new DatabaseHandler(SearchResults.this);
@@ -246,7 +253,7 @@ public class SearchResults extends Activity {
 					if(exists==false){
 					String res = DownloadFromUrl(poster, posterFile);
 					db.addMovie(new MoviesDatabaseEntry(title, runtime, rating, genres, type,
-							lang, posterFile, url, directors, actors, plot, year, country, date, 0.0), listName);
+							lang, posterFile, url, directors, actors, plot, year, country, date, 0.0, id), listName);
 						return res;
 				    }
 					else{

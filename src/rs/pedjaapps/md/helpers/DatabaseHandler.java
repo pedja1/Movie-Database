@@ -26,7 +26,7 @@ public class DatabaseHandler extends SQLiteOpenHelper
 	
 	private static final String[] filds = {"_id", "title", "runtime", "rating", "genres",
 			"type","language", "poster", "url", "director",
-			"actors", "plot", "year", "country", "date", "user_rating"};
+			"actors", "plot", "year", "country", "date", "user_rating", "imdb_id"};
 	
     public DatabaseHandler(Context context)
 	{
@@ -53,7 +53,8 @@ public class DatabaseHandler extends SQLiteOpenHelper
 			+ filds[12] + " INTEGER,"
 			+ filds[13] + " TEXT,"
 			+ filds[14] + " INTEGER,"
-			+ filds[15] + " DOUBLE"
+			+ filds[15] + " DOUBLE,"
+			+ filds[16] + " TEXT"
 			+
 			")";
         
@@ -73,7 +74,8 @@ public class DatabaseHandler extends SQLiteOpenHelper
 			+ filds[12] + " INTEGER,"
 			+ filds[13] + " TEXT,"
 			+ filds[14] + " INTEGER," 
-			+ filds[15] + " DOUBLE"
+			+ filds[15] + " DOUBLE,"
+			+ filds[16] + " TEXT"
 			+
 			")";
 			
@@ -121,6 +123,7 @@ public class DatabaseHandler extends SQLiteOpenHelper
         values.put(filds[13], movie.get_country()); 
         values.put(filds[14], movie.get_date());
 		values.put(filds[15], movie.get_ur());
+		values.put(filds[16], movie.get_imdb_id());
 
         // Inserting Row
         db.insert(table, null, values);
@@ -147,7 +150,8 @@ public class DatabaseHandler extends SQLiteOpenHelper
         		filds[12],
         		filds[13],
         		filds[14],
-				filds[15]
+				filds[15],
+				filds[16]
 									 
 									 
 									}, filds[0] + "=?",
@@ -170,7 +174,8 @@ public class DatabaseHandler extends SQLiteOpenHelper
 									  cursor.getInt(12),
 									  cursor.getString(13),
 									  cursor.getInt(14),
-									  cursor.getDouble(15)
+									  cursor.getDouble(15),
+									  cursor.getString(16)
 									  );
         // return list
         db.close();
@@ -197,7 +202,8 @@ public class DatabaseHandler extends SQLiteOpenHelper
 									 filds[12],
 									 filds[13],
 									 filds[14],
-									 filds[15]
+									 filds[15],
+									 filds[16]
 
 
 								 }, filds[1] + "=?",
@@ -220,7 +226,8 @@ public class DatabaseHandler extends SQLiteOpenHelper
 															cursor.getInt(12),
 															cursor.getString(13),
 															cursor.getInt(14),
-															cursor.getDouble(15)
+															cursor.getDouble(15),
+															cursor.getString(16)
 															);
         // return list
         db.close();
@@ -258,6 +265,8 @@ public class DatabaseHandler extends SQLiteOpenHelper
 				list.set_country(cursor.getString(13));
 				list.set_date(cursor.getInt(14));
 			    list.set_ur(cursor.getDouble(15));
+				list.set_imdb_id(cursor.getString(16));
+			    
 
 
                 
@@ -336,6 +345,7 @@ public class DatabaseHandler extends SQLiteOpenHelper
 				list.set_country(cursor.getString(13));
 				list.set_date(cursor.getInt(14));
 				list.set_ur(cursor.getDouble(15));
+				list.set_imdb_id(cursor.getString(16));
 				
 
 
@@ -379,7 +389,8 @@ public class DatabaseHandler extends SQLiteOpenHelper
         		filds[12],
         		filds[13],
         		filds[14],
-				filds[15]
+				filds[15],
+				filds[16]
 									}, filds[1] + "=?",
 								 new String[] { movieName }, null, null, null, null);
         boolean exists = (cursor.getCount() > 0);
@@ -408,6 +419,7 @@ public class DatabaseHandler extends SQLiteOpenHelper
         values.put(filds[13], movie.get_country()); 
         values.put(filds[14], movie.get_date());
 		values.put(filds[15], movie.get_ur());
+		values.put(filds[16], movie.get_imdb_id());
         
         return db.update(table, values, filds[1] + " = ?",
 						 new String[] { title });

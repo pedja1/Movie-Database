@@ -20,6 +20,7 @@ public class MoviesDatabaseEntry
     String _country;
     int _date;
 	double _ur;
+	String _imdb_id;
 
     // Empty constructor
     public MoviesDatabaseEntry()
@@ -30,7 +31,7 @@ public class MoviesDatabaseEntry
 	public MoviesDatabaseEntry(int _id, String _title, String _runtime,
 			double _rating, String _genres, String _type, String _lang,
 			String _poster, String _url, String _director, String _actors,
-			String _plot, int _year, String _country, int _date, double _ur) {
+			String _plot, int _year, String _country, int _date, double _ur, String _imdb_id) {
 		
 		this._id = _id;
 		this._title = _title;
@@ -48,12 +49,13 @@ public class MoviesDatabaseEntry
 		this._country = _country;
 		this._date = _date;
 		this._ur = _ur;
+		this._imdb_id = _imdb_id;
 	}
    
 	public MoviesDatabaseEntry(String _title, String _runtime,
 			double _rating, String _genres, String _type, String _lang,
 			String _poster, String _url, String _director, String _actors,
-			String _plot, int _year, String _country, int _date, double _ur) {
+			String _plot, int _year, String _country, int _date, double _ur, String _imdb_id) {
 		
 		this._title = _title;
 		this._runtime = _runtime;
@@ -70,6 +72,7 @@ public class MoviesDatabaseEntry
 		this._country = _country;
 		this._date = _date;
 		this._ur = _ur;
+		this._imdb_id = _imdb_id;
 	}
 
 	public int get_id() {
@@ -198,6 +201,14 @@ public class MoviesDatabaseEntry
 
 	public void set_ur(double _ur) {
 		this._ur = _ur;
+	}
+
+	public String get_imdb_id() {
+		return _imdb_id;
+	}
+
+	public void set_imdb_id(String _imdb_id) {
+		this._imdb_id = _imdb_id;
 	}
 	
 }
