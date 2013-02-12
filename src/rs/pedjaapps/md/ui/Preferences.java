@@ -17,6 +17,7 @@ public class Preferences extends PreferenceActivity
 {
 
 	private ListPreference themePrefList;
+	private ListPreference ratPrefList;
 
 	
 	@Override
@@ -63,7 +64,23 @@ public class Preferences extends PreferenceActivity
             }
         }); 
         
-       
+		ratPrefList = (ListPreference) findPreference("rating");
+        ratPrefList.setDefaultValue(ratPrefList.getEntryValues()[0]);
+        String rat = ratPrefList.getValue();
+        if (rat == null) {
+            ratPrefList.setValue((String)ratPrefList.getEntryValues()[0]);
+            rat = ratPrefList.getValue();
+        }
+        ratPrefList.setSummary(ratPrefList.getEntries()[ratPrefList.findIndexOfValue(rat)]);
+
+
+        ratPrefList.setOnPreferenceChangeListener(new OnPreferenceChangeListener() {
+				@Override
+				public boolean onPreferenceChange(Preference preference, Object newValue) {
+					ratPrefList.setSummary(ratPrefList.getEntries()[ratPrefList.findIndexOfValue(newValue.toString())]);
+					return true;
+				}
+			}); 
         
 	}
 	

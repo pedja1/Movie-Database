@@ -76,7 +76,7 @@
         android:layout_height="match_parent"
         android:layout_weight="0"
         android:gravity="center_vertical"
-        android:maxLength="3"
+        android:maxLength="4"
         android:text="6.5"
         android:textSize="30sp" />
 

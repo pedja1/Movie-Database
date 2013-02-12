@@ -1,291 +1,327 @@
 <?xml version="1.0" encoding="utf-8"?>
- <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
-       android:id="@+id/scrollView1"
-       android:layout_width="wrap_content"
-       android:layout_height="wrap_content" >
-<RelativeLayout 
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content" >
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+	android:id="@+id/scrollView1"
+	android:layout_width="wrap_content"
+	android:layout_height="wrap_content" >
+	<RelativeLayout 
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content" >
 
-    <ImageView
-        android:id="@+id/image"
-        android:layout_width="100dp"
-        android:layout_height="148dp"
-        android:layout_margin="10dp"
-        android:src="@drawable/ic_launcher" />
+		<ImageView
+			android:id="@+id/image"
+			android:layout_width="100dp"
+			android:layout_height="148dp"
+			android:layout_margin="10dp"
+			android:src="@drawable/ic_launcher" />
 
-    <RelativeLayout
-        android:id="@+id/RelativeLayout1"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignBottom="@+id/image"
-        android:layout_alignParentTop="true"
-        android:layout_toRightOf="@+id/image" >
+		<RelativeLayout
+			android:id="@+id/RelativeLayout1"
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:layout_alignBottom="@+id/image"
+			android:layout_alignParentTop="true"
+			android:layout_toRightOf="@+id/image" >
 
-        <TextView
-            android:id="@+id/title"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="8dp"
-            android:layout_marginTop="8dp"
-            android:layout_marginRight="8dp"
-            android:text="title"
-            android:textAppearance="?android:attr/textAppearanceLarge" />
+			<TextView
+				android:id="@+id/title"
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:layout_marginLeft="8dp"
+				android:layout_marginTop="8dp"
+				android:layout_marginRight="8dp"
+				android:text="title"
+				android:textAppearance="?android:attr/textAppearanceLarge" />
 
-        <TextView
-            android:id="@+id/runtime"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentLeft="true"
-            android:layout_below="@+id/title"
-            android:layout_marginLeft="8dp"
-            android:layout_marginRight="8dp"
-            android:layout_marginTop="5dp"
-            android:text="runtime" />
+			<TextView
+				android:id="@+id/runtime"
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:layout_alignParentLeft="true"
+				android:layout_below="@+id/title"
+				android:layout_marginLeft="8dp"
+				android:layout_marginRight="8dp"
+				android:layout_marginTop="5dp"
+				android:text="runtime" />
 
-        <TextView
-            android:id="@+id/plot"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_alignParentLeft="true"
-            android:layout_below="@+id/runtime"
-            android:layout_marginLeft="8dp"
-            android:layout_marginRight="8dp"
-            android:layout_marginTop="5dp"
-            android:text="plot" />
+			<TextView
+				android:id="@+id/plot"
+				android:layout_width="match_parent"
+				android:layout_height="match_parent"
+				android:layout_alignParentLeft="true"
+				android:layout_below="@+id/runtime"
+				android:layout_marginLeft="8dp"
+				android:layout_marginRight="8dp"
+				android:layout_marginTop="5dp"
+				android:text="plot" />
 
-    </RelativeLayout>
+		</RelativeLayout>
 
-    <ImageView
-        android:id="@+id/imageView1"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/image"
-        android:layout_marginBottom="5dp"
-        android:scaleType="fitXY"
-        android:src="@drawable/divider_strong_holo" />
+		<ImageView
+			android:id="@+id/imageView1"
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:layout_below="@+id/image"
+			android:layout_marginBottom="5dp"
+			android:scaleType="fitXY"
+			android:src="@drawable/divider_strong_holo" />
 
-    
-    <LinearLayout
-        android:id="@+id/rating_layout"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_below="@+id/imageView1"
-        android:layout_marginLeft="5dp"
-        android:layout_marginRight="5dp">
-    <RatingBar
-        android:id="@+id/rating"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:numStars="5"
-        android:stepSize="0.1" />
 
-    <TextView
-        android:id="@+id/rating_text"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center_vertical"
-        android:layout_weight="0.5"
-        android:text="6.5/10.0"
-        android:textAppearance="?android:attr/textAppearanceLarge" />
+		<LinearLayout
+			android:id="@+id/rating_layout"
+			android:layout_width="match_parent"
+			android:layout_height="match_parent"
+			android:layout_below="@+id/imageView1"
+			android:layout_marginLeft="5dp"
+			android:layout_marginRight="5dp">
+			<!--<RatingBar
+			android:id="@+id/rating"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:numStars="5"
+			android:stepSize="0.1" />-->
+			<RelativeLayout
 
-    </LinearLayout>
-    
-   <ImageView
-        android:id="@+id/imageView2"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/rating_layout"
-        android:layout_marginBottom="5dp"
-        android:scaleType="fitXY"
-        android:src="@drawable/divider_strong_holo" />
+				android:layout_width="match_parent"
+				android:layout_height="match_parent"
+				android:layout_marginLeft="5dp"
+				android:layout_marginRight="5dp"
+				android:layout_weight="1">
+				<TextView
+					android:id="@+id/imdb"
+					android:layout_width="wrap_content"
+					android:layout_height="wrap_content"
+					android:text="IMDb"
+					android:textAppearance="?android:attr/textAppearanceLarge" />
+				<TextView
+					android:id="@+id/imdb_text"
+					android:layout_width="wrap_content"
+					android:layout_height="wrap_content"
+					android:layout_toRightOf="@+id/imdb"
+					android:text="0.0/10.0"
+					android:layout_marginLeft="5dp"
+					android:textAppearance="?android:attr/textAppearanceLarge" />
+			</RelativeLayout>
+			
+			<RelativeLayout
+                android:id="@+id/ur_layout"
+				android:layout_width="match_parent"
+				android:layout_height="match_parent"
+				android:layout_marginLeft="5dp"
+				android:layout_marginRight="5dp"
+				android:layout_weight="1">
+				<TextView
+					android:id="@+id/usr"
+					android:layout_width="wrap_content"
+					android:layout_height="wrap_content"
+					android:text="Your"
+					android:textAppearance="?android:attr/textAppearanceLarge" />
+				<TextView
+					android:id="@+id/usr_text"
+					android:layout_width="wrap_content"
+					android:layout_height="wrap_content"
+					android:layout_toRightOf="@+id/usr"
+					android:text="0.0/10.0"
+					android:layout_marginLeft="5dp"
+					android:textAppearance="?android:attr/textAppearanceLarge" />
+			</RelativeLayout>
+			
+		</LinearLayout>
 
-    <LinearLayout
-       android:id="@+id/date_layout"
-       android:layout_width="match_parent"
-       android:layout_height="wrap_content"
-       android:layout_alignParentLeft="true"
-       android:layout_below="@+id/imageView2"
-       android:layout_marginLeft="5dp"
-       android:layout_marginRight="5dp"
-       android:layout_marginTop="5dp"
-       android:orientation="vertical" >
+		<ImageView
+			android:id="@+id/imageView2"
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:layout_below="@+id/rating_layout"
+			android:layout_marginBottom="5dp"
+			android:scaleType="fitXY"
+			android:src="@drawable/divider_strong_holo" />
 
-       <TextView
-           android:layout_width="wrap_content"
-           android:layout_height="wrap_content"
-           android:text="Release Date"
-           android:textAppearance="?android:attr/textAppearanceLarge" />
+		<LinearLayout
+			android:id="@+id/date_layout"
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:layout_alignParentLeft="true"
+			android:layout_below="@+id/imageView2"
+			android:layout_marginLeft="5dp"
+			android:layout_marginRight="5dp"
+			android:layout_marginTop="5dp"
+			android:orientation="vertical" >
 
-       <TextView
-           android:id="@+id/date"
-           android:layout_width="wrap_content"
-           android:layout_height="wrap_content"
-           android:text="25.05.2001" />
+			<TextView
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:text="Release Date"
+				android:textAppearance="?android:attr/textAppearanceLarge" />
 
-   </LinearLayout>
-   <ImageView
-        android:id="@+id/imageView3"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/date_layout"
-        android:layout_marginBottom="5dp"
-        android:scaleType="fitXY"
-        android:src="@drawable/divider_strong_holo" />
-   <LinearLayout
-       android:id="@+id/d_layout"
-       android:layout_width="match_parent"
-       android:layout_height="wrap_content"
-       android:layout_alignParentLeft="true"
-       android:layout_below="@+id/imageView3"
-       android:layout_marginLeft="5dp"
-       android:layout_marginRight="5dp"
-       android:layout_marginTop="5dp"
-       android:orientation="vertical" >
+			<TextView
+				android:id="@+id/date"
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:text="25.05.2001" />
 
-       <TextView
-           android:layout_width="wrap_content"
-           android:layout_height="wrap_content"
-           android:text="Director"
-           android:textAppearance="?android:attr/textAppearanceLarge" />
+		</LinearLayout>
+		<ImageView
+			android:id="@+id/imageView3"
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:layout_below="@+id/date_layout"
+			android:layout_marginBottom="5dp"
+			android:scaleType="fitXY"
+			android:src="@drawable/divider_strong_holo" />
+		<LinearLayout
+			android:id="@+id/d_layout"
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:layout_alignParentLeft="true"
+			android:layout_below="@+id/imageView3"
+			android:layout_marginLeft="5dp"
+			android:layout_marginRight="5dp"
+			android:layout_marginTop="5dp"
+			android:orientation="vertical" >
 
-       <TextView
-           android:id="@+id/director"
-           android:layout_width="wrap_content"
-           android:layout_height="wrap_content"
-           android:text="director" />
+			<TextView
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:text="Director"
+				android:textAppearance="?android:attr/textAppearanceLarge" />
 
-   </LinearLayout>
-   <ImageView
-        android:id="@+id/imageView4"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/d_layout"
-        android:layout_marginBottom="5dp"
-        android:scaleType="fitXY"
-        android:src="@drawable/divider_strong_holo" />
-   <LinearLayout
-       android:id="@+id/g_layout"
-       android:layout_width="match_parent"
-       android:layout_height="wrap_content"
-       android:layout_alignParentLeft="true"
-       android:layout_below="@+id/imageView4"
-       android:layout_marginLeft="5dp"
-       android:layout_marginRight="5dp"
-       android:layout_marginTop="5dp"
-       android:orientation="vertical" >
+			<TextView
+				android:id="@+id/director"
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:text="director" />
 
-       <TextView
-           android:layout_width="wrap_content"
-           android:layout_height="wrap_content"
-           android:text="Genre"
-           android:textAppearance="?android:attr/textAppearanceLarge" />
+		</LinearLayout>
+		<ImageView
+			android:id="@+id/imageView4"
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:layout_below="@+id/d_layout"
+			android:layout_marginBottom="5dp"
+			android:scaleType="fitXY"
+			android:src="@drawable/divider_strong_holo" />
+		<LinearLayout
+			android:id="@+id/g_layout"
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:layout_alignParentLeft="true"
+			android:layout_below="@+id/imageView4"
+			android:layout_marginLeft="5dp"
+			android:layout_marginRight="5dp"
+			android:layout_marginTop="5dp"
+			android:orientation="vertical" >
 
-       <TextView
-           android:id="@+id/genre"
-           android:layout_width="wrap_content"
-           android:layout_height="wrap_content"
-           android:text="genre" />
+			<TextView
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:text="Genre"
+				android:textAppearance="?android:attr/textAppearanceLarge" />
 
-   </LinearLayout>
-   <ImageView
-        android:id="@+id/imageView5"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/g_layout"
-        android:layout_marginBottom="5dp"
-        android:scaleType="fitXY"
-        android:src="@drawable/divider_strong_holo" />
-   <LinearLayout
-       android:id="@+id/c_layout"
-       android:layout_width="match_parent"
-       android:layout_height="wrap_content"
-       android:layout_alignParentLeft="true"
-       android:layout_below="@+id/imageView5"
-       android:layout_marginLeft="5dp"
-       android:layout_marginRight="5dp"
-       android:layout_marginTop="5dp"
-       android:orientation="vertical" >
+			<TextView
+				android:id="@+id/genre"
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:text="genre" />
 
-       <TextView
-           android:layout_width="wrap_content"
-           android:layout_height="wrap_content"
-           android:text="Cast"
-           android:textAppearance="?android:attr/textAppearanceLarge" />
+		</LinearLayout>
+		<ImageView
+			android:id="@+id/imageView5"
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:layout_below="@+id/g_layout"
+			android:layout_marginBottom="5dp"
+			android:scaleType="fitXY"
+			android:src="@drawable/divider_strong_holo" />
+		<LinearLayout
+			android:id="@+id/c_layout"
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:layout_alignParentLeft="true"
+			android:layout_below="@+id/imageView5"
+			android:layout_marginLeft="5dp"
+			android:layout_marginRight="5dp"
+			android:layout_marginTop="5dp"
+			android:orientation="vertical" >
 
-       <TextView
-           android:id="@+id/cast"
-           android:layout_width="wrap_content"
-           android:layout_height="wrap_content"
-           android:text="cast" />
+			<TextView
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:text="Cast"
+				android:textAppearance="?android:attr/textAppearanceLarge" />
 
-   </LinearLayout>
-   <ImageView
-        android:id="@+id/imageView6"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/c_layout"
-        android:layout_marginBottom="5dp"
-        android:scaleType="fitXY"
-        android:src="@drawable/divider_strong_holo" />
-   <LinearLayout
-       android:id="@+id/cou_layout"
-       android:layout_width="match_parent"
-       android:layout_height="wrap_content"
-       android:layout_alignParentLeft="true"
-       android:layout_below="@+id/imageView6"
-       android:layout_marginLeft="5dp"
-       android:layout_marginRight="5dp"
-       android:layout_marginTop="5dp"
-       android:orientation="vertical" >
+			<TextView
+				android:id="@+id/cast"
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:text="cast" />
 
-       <TextView
-           android:layout_width="wrap_content"
-           android:layout_height="wrap_content"
-           android:text="Country"
-           android:textAppearance="?android:attr/textAppearanceLarge" />
+		</LinearLayout>
+		<ImageView
+			android:id="@+id/imageView6"
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:layout_below="@+id/c_layout"
+			android:layout_marginBottom="5dp"
+			android:scaleType="fitXY"
+			android:src="@drawable/divider_strong_holo" />
+		<LinearLayout
+			android:id="@+id/cou_layout"
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:layout_alignParentLeft="true"
+			android:layout_below="@+id/imageView6"
+			android:layout_marginLeft="5dp"
+			android:layout_marginRight="5dp"
+			android:layout_marginTop="5dp"
+			android:orientation="vertical" >
 
-       <TextView
-           android:id="@+id/country"
-           android:layout_width="wrap_content"
-           android:layout_height="wrap_content"
-           android:text="USA" />
+			<TextView
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:text="Country"
+				android:textAppearance="?android:attr/textAppearanceLarge" />
 
-   </LinearLayout>
-   <ImageView
-        android:id="@+id/imageView7"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/cou_layout"
-        android:layout_marginBottom="5dp"
-        android:scaleType="fitXY"
-        android:src="@drawable/divider_strong_holo" />
-   <LinearLayout
-       android:id="@+id/l_layout"
-       android:layout_width="match_parent"
-       android:layout_height="wrap_content"
-       android:layout_alignParentLeft="true"
-       android:layout_below="@+id/imageView7"
-       android:layout_marginLeft="5dp"
-       android:layout_marginRight="5dp"
-       android:layout_marginTop="5dp"
-       android:orientation="vertical" >
+			<TextView
+				android:id="@+id/country"
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:text="USA" />
 
-       <TextView
-           android:layout_width="wrap_content"
-           android:layout_height="wrap_content"
-           android:text="Language"
-           android:textAppearance="?android:attr/textAppearanceLarge" />
+		</LinearLayout>
+		<ImageView
+			android:id="@+id/imageView7"
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:layout_below="@+id/cou_layout"
+			android:layout_marginBottom="5dp"
+			android:scaleType="fitXY"
+			android:src="@drawable/divider_strong_holo" />
+		<LinearLayout
+			android:id="@+id/l_layout"
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:layout_alignParentLeft="true"
+			android:layout_below="@+id/imageView7"
+			android:layout_marginLeft="5dp"
+			android:layout_marginRight="5dp"
+			android:layout_marginTop="5dp"
+			android:orientation="vertical" >
 
-       <TextView
-           android:id="@+id/lang"
-           android:layout_width="wrap_content"
-           android:layout_height="wrap_content"
-           android:text="English" />
+			<TextView
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:text="Language"
+				android:textAppearance="?android:attr/textAppearanceLarge" />
 
-   </LinearLayout>
+			<TextView
+				android:id="@+id/lang"
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:text="English" />
 
-   
+		</LinearLayout>
 
-</RelativeLayout>
- </ScrollView>
+
+
+	</RelativeLayout>
+</ScrollView>

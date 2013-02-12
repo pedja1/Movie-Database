@@ -11,6 +11,7 @@ import android.view.animation.Animation.*;
 import android.widget.*;
 import com.google.ads.*;
 import rs.pedjaapps.md.*;
+import rs.pedjaapps.md.tools.*;
 
 public class Lists extends Activity {
 
@@ -75,7 +76,8 @@ public class Lists extends Activity {
 			AdView adView = (AdView) findViewById(R.id.ad);
 			adView.loadAd(new AdRequest());
 		}
-
+        //new GetImdbWatchlist().execute();
+	System.out.println(new ReadImdbWatchlist().read());
 		
 }
 	@Override

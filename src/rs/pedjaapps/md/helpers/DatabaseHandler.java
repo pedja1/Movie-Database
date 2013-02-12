@@ -26,7 +26,7 @@ public class DatabaseHandler extends SQLiteOpenHelper
 	
 	private static final String[] filds = {"_id", "title", "runtime", "rating", "genres",
 			"type","language", "poster", "url", "director",
-			"actors", "plot", "year", "country", "date"};
+			"actors", "plot", "year", "country", "date", "user_rating"};
 	
     public DatabaseHandler(Context context)
 	{
@@ -52,7 +52,8 @@ public class DatabaseHandler extends SQLiteOpenHelper
 			+ filds[11] + " TEXT," 
 			+ filds[12] + " INTEGER,"
 			+ filds[13] + " TEXT,"
-			+ filds[14] + " INTEGER"
+			+ filds[14] + " INTEGER,"
+			+ filds[15] + " DOUBLE"
 			+
 			")";
         
@@ -71,7 +72,8 @@ public class DatabaseHandler extends SQLiteOpenHelper
 			+ filds[11] + " TEXT," 
 			+ filds[12] + " INTEGER,"
 			+ filds[13] + " TEXT,"
-			+ filds[14] + " INTEGER" 
+			+ filds[14] + " INTEGER," 
+			+ filds[15] + " DOUBLE"
 			+
 			")";
 			
@@ -118,6 +120,7 @@ public class DatabaseHandler extends SQLiteOpenHelper
         values.put(filds[12], movie.get_year());
         values.put(filds[13], movie.get_country()); 
         values.put(filds[14], movie.get_date());
+		values.put(filds[15], movie.get_ur());
 
         // Inserting Row
         db.insert(table, null, values);
@@ -143,7 +146,8 @@ public class DatabaseHandler extends SQLiteOpenHelper
         		filds[11],
         		filds[12],
         		filds[13],
-        		filds[14]
+        		filds[14],
+				filds[15]
 									 
 									 
 									}, filds[0] + "=?",
@@ -165,7 +169,8 @@ public class DatabaseHandler extends SQLiteOpenHelper
 									  cursor.getString(11),
 									  cursor.getInt(12),
 									  cursor.getString(13),
-									  cursor.getInt(14)
+									  cursor.getInt(14),
+									  cursor.getDouble(15)
 									  );
         // return list
         db.close();
@@ -191,7 +196,8 @@ public class DatabaseHandler extends SQLiteOpenHelper
 									 filds[11],
 									 filds[12],
 									 filds[13],
-									 filds[14]
+									 filds[14],
+									 filds[15]
 
 
 								 }, filds[1] + "=?",
@@ -213,7 +219,8 @@ public class DatabaseHandler extends SQLiteOpenHelper
 															cursor.getString(11),
 															cursor.getInt(12),
 															cursor.getString(13),
-															cursor.getInt(14)
+															cursor.getInt(14),
+															cursor.getDouble(15)
 															);
         // return list
         db.close();
@@ -250,6 +257,7 @@ public class DatabaseHandler extends SQLiteOpenHelper
 				list.set_year(cursor.getInt(12));
 				list.set_country(cursor.getString(13));
 				list.set_date(cursor.getInt(14));
+			    list.set_ur(cursor.getDouble(15));
 
 
                 
@@ -327,6 +335,8 @@ public class DatabaseHandler extends SQLiteOpenHelper
 				list.set_year(cursor.getInt(12));
 				list.set_country(cursor.getString(13));
 				list.set_date(cursor.getInt(14));
+				list.set_ur(cursor.getDouble(15));
+				
 
 
                 // Adding  to list
@@ -368,7 +378,8 @@ public class DatabaseHandler extends SQLiteOpenHelper
         		filds[11],
         		filds[12],
         		filds[13],
-        		filds[14]
+        		filds[14],
+				filds[15]
 									}, filds[1] + "=?",
 								 new String[] { movieName }, null, null, null, null);
         boolean exists = (cursor.getCount() > 0);
@@ -377,7 +388,7 @@ public class DatabaseHandler extends SQLiteOpenHelper
         return exists;
 	}
 	
-	public int updateMovie(MoviesDatabaseEntry movie, int position, String table)
+	public int updateMovie(MoviesDatabaseEntry movie, String title, String table)
 	{
         SQLiteDatabase db = this.getWritableDatabase();
 
@@ -396,9 +407,10 @@ public class DatabaseHandler extends SQLiteOpenHelper
         values.put(filds[12], movie.get_year());
         values.put(filds[13], movie.get_country()); 
         values.put(filds[14], movie.get_date());
+		values.put(filds[15], movie.get_ur());
         
-        return db.update(table, values, filds[0] + " = ?",
-						 new String[] { String.valueOf(position) });
+        return db.update(table, values, filds[1] + " = ?",
+						 new String[] { title });
         }
 	
 	public int getMoviesCount(String table)

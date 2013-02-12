@@ -249,7 +249,7 @@ public class SearchResults extends Activity {
 					if(exists==false){
 					String res = DownloadFromUrl(poster, posterFile);
 					db.addMovie(new MoviesDatabaseEntry(title, runtime, rating, genres, type,
-							lang, posterFile, url, directors, actors, plot, year, country, date), listName);
+							lang, posterFile, url, directors, actors, plot, year, country, date, 0.0), listName);
 						return res;
 				    }
 					else{

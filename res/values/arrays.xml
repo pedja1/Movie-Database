@@ -12,76 +12,14 @@
         <item>dark</item>  
     </string-array>
     
-    <string-array name="curency_entry">
-		<item>DIN - Serbian</item>
-		<item>EUR - European Union</item>
-        <item>GBP - Great Britain</item>
-        <item>HRK - Croatia</item>
-        <item>HUF - Hungary</item> 
-        <item>JPY - Japan</item> 
-        <item>KWD - Kuwait</item>
-        <item>NOK - Norway</item>
-        <item>SEK - Sweden</item>
-        <item>USD - United States</item>
-        <item>DKK - Denmark</item>
-        <item>CZK - Czech Republic</item>
-        <item>CHF - Switzerlan</item>
-        <item>CAD - Canada</item>
-        <item>BAM - Bosnia and Herzegovina</item>
-        <item>AUD - Australia</item>
-       
+	<string-array name="rat_entry">
+        <item>IMDb Rating</item>
+        <item>Your Rating</item>
     </string-array>
 
-    <string-array name="curency_values">
-        <item>din</item>
-		<item>eur</item>
-        <item>gbp</item>
-        <item>hrk</item>  
-        <item>huf</item>
-        <item>jpy</item>
-        <item>kwd</item>
-        <item>nok</item>
-        <item>sek</item>
-        <item>usd</item>
-        <item>dkk</item>
-        <item>czk</item>
-        <item>chf</item>
-        <item>cad</item>
-        <item>bam</item>
-        <item>aud</item>
-        
-    </string-array>
-	
-	<string-array name="update_entry">
-        <item>1h</item>
-        <item>3h</item>
-        <item>6h</item>  
-		<item>12h</item>
-        <item>18h</item>
-        <item>24h</item>  
-    </string-array>
-
-    <string-array name="update_values">
-		<item>3600000</item>
-        <item>10800000</item>
-        <item>21600000</item>  
-		<item>43200000</item>
-        <item>64800000</item>
-        <item>86400000</item>  
+    <string-array name="rat_values">
+        <item>imdb</item>
+        <item>user</item>
     </string-array>
     
-    <string-array name="units">
-		<item>pieces</item>
-        <item>kg</item>
-        <item>lit</item>  
-		<item>gr</item>
-        <item>cm</item>
-        <item>package</item>  
-        <item>inch</item>
-        <item>foot</item>
-        <item>bootle</item>  
-		<item>box</item>
-        <item>unit</item>
-        <item>pair</item>  
-    </string-array>
 </resources>

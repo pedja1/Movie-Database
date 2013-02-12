@@ -48,6 +48,7 @@ public class MoviesActivity extends Activity
 	String director = "";
 	double from = 0.0;
 	double to = 10.0;
+	String rat;
 	
 
 	@Override
@@ -99,6 +100,8 @@ public class MoviesActivity extends Activity
 		actionBar.setDisplayHomeAsUpEnabled(true);
 		actionBar.setTitle(listName);
 
+		rat = prefs.getString("rating", "imdb");
+		
 		SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
 		searchView = new SearchView(actionBar.getThemedContext());
 		searchView.setQueryHint("Add new Movie");
@@ -221,9 +224,15 @@ public class MoviesActivity extends Activity
 		List<MoviesDatabaseEntry> dbEntry = db.getAllMovies(listName, title, actor, year, genres, director, from, to);
 		for (MoviesDatabaseEntry e : dbEntry)
 		{
+			
+			if(rat.equals("imdb")){
 			entries.add(new MoviesEntry(e.get_title(), e.get_year(), e
 					.get_rating(), e.get_poster(), e.get_genres(), e.get_actors(), e.get_date()));
-			
+			}
+			if(rat.equals("user")){
+				entries.add(new MoviesEntry(e.get_title(), e.get_year(), e
+											.get_ur(), e.get_poster(), e.get_genres(), e.get_actors(), e.get_date()));
+			}
 		}
 		switch (sortMode)
 		{
@@ -249,6 +258,7 @@ public class MoviesActivity extends Activity
 		return entries;
 	}
 
+	
 
 	static class SortByRatingAscending implements Comparator<MoviesEntry>
 	{
