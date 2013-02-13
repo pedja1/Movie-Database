@@ -488,11 +488,56 @@ public class MoviesActivity extends Activity
 	}
 	
 	private void infoDialog(){
+		List<MoviesDatabaseEntry> temp = db.getAllMovies(listName, "","",0,"","",0,10);
+		double max = temp.get(0).get_rating();
+		String h = "";
+		for(MoviesDatabaseEntry e: temp){
+			if(e.get_rating()>max){
+				max = e.get_rating();
+				h = e.get_title();
+			}
+		}
+		
+		double min = temp.get(0).get_rating();
+		String l = "";
+		for(MoviesDatabaseEntry e: temp){
+			if(e.get_rating()<min){
+				min = e.get_rating();
+				l = e.get_title();
+			}
+		}
+		
+		String sort = "";
+		switch(sortMode){
+			case 0:
+			    sort = "List Order";
+			    break;
+			case 1:
+			    sort = "Alphabetically Ascending";
+			    break;
+			case 2:
+			    sort = "Alphabetically Descending";
+			    break;
+			case 3:
+			    sort = "By Release Date Ascending";
+			    break;
+			case 4:
+			    sort = "By Release Date Descending";
+			    break;
+			case 5:
+			    sort = "By Ratings Ascending";
+			    break;
+			case 6:
+			    sort = "By Ratings Descending";
+			    break;
+		}
 		AlertDialog.Builder builder = new AlertDialog.Builder(
 			MoviesActivity.this);
 
 		builder.setTitle("List Info");
-	    builder.setMessage("List: " + listName+"\nNumber of Movies: "+db.getMoviesCount(listName));
+	    builder.setMessage("List: " + listName+"\nNumber of Movies: "+db.getMoviesCount(listName)+"\nShowing: "+entries.size()+"\nSort Mode: "+sort+
+		"\nBest Rated: "+h+"("+max+")"+
+		"\nWorst Rated: "+l+"("+min+")");
 		builder.setNegativeButton("Close", new DialogInterface.OnClickListener() {
 				@Override
 				public void onClick(DialogInterface dialog, int which)
