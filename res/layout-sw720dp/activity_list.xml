@@ -48,7 +48,7 @@
         android:layout_alignParentLeft="true"
         android:layout_alignParentTop="true"
         android:fastScrollEnabled="true"
-        android:numColumns="1" >
+        android:numColumns="4" >
 
     </GridView>
     

@@ -19,6 +19,10 @@ import org.apache.http.impl.client.*;
 import org.apache.http.params.*;
 import org.apache.http.util.*;
 import org.json.*;
+
+import com.google.ads.AdRequest;
+import com.google.ads.AdView;
+
 import rs.pedjaapps.md.*;
 import rs.pedjaapps.md.entries.*;
 import rs.pedjaapps.md.helpers.*;
@@ -61,6 +65,7 @@ public class MovieDetails extends Activity {
 		table = i.getExtras().getString("table");
 		db = new DatabaseHandler(this);
 		
+		
 	    setUI();
 	((RelativeLayout)findViewById(R.id.ur_layout)).setOnClickListener(new View.OnClickListener(){
 
@@ -77,17 +82,34 @@ public class MovieDetails extends Activity {
 		rating.setRating((float) e.get_rating()/2);*/
 		
 		((TextView)findViewById(R.id.usr_text)).setText(e.get_ur()+"/10");
-		/*boolean ads = sharedPrefs.getBoolean("ads", true);
+		boolean ads = sharedPrefs.getBoolean("ads", true);
 		if (ads == true) {
 			AdView adView = (AdView) findViewById(R.id.ad);
 			adView.loadAd(new AdRequest());
-		}*/
+		}
 
 		
 }
 	
 	private void setUI(){
 		e = db.getMovieByName(table, title);
+		getActionBar().setTitle(title);
+		String type = e.get_type();
+		if(type.equals("M")){
+			getActionBar().setSubtitle("Movie");
+		}
+		else if(type.equals("TVS")){
+			getActionBar().setSubtitle("TV Series");
+		}
+		else if(type.equals("TV")){
+			getActionBar().setSubtitle("TV Movie");
+		}
+		else if(type.equals("V")){
+			getActionBar().setSubtitle("Video");
+		}
+		else if(type.equals("VG")){
+			getActionBar().setSubtitle("Video Game");
+		}
 		((ImageView)findViewById(R.id.image)).setImageURI(Uri.parse(e.get_poster()));
 		((TextView)findViewById(R.id.title)).setText(e.get_title()+"("+e.get_year()+")");
 		((TextView)findViewById(R.id.runtime)).setText(e.get_runtime());

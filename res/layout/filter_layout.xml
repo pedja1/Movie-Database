@@ -15,7 +15,10 @@
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
             android:layout_alignParentTop="true"
-            android:layout_toRightOf="@+id/textView1" />
+            android:layout_toRightOf="@+id/textView1"
+            android:hint="@string/hit_title"
+            android:inputType="text"
+            android:singleLine="true" />
 
         <TextView
             android:id="@+id/textView1"
@@ -23,7 +26,7 @@
             android:layout_height="wrap_content"
             android:layout_alignParentLeft="true"
             android:layout_centerVertical="true"
-            android:text="Title:" />
+            android:text="@string/title_" />
     </RelativeLayout>
 
     <RelativeLayout
@@ -36,7 +39,10 @@
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
             android:layout_alignParentTop="true"
-            android:layout_toRightOf="@+id/TextView01" />
+            android:layout_toRightOf="@+id/TextView01"
+            android:hint="@string/hint_actor"
+            android:inputType="text"
+            android:singleLine="true" />
 
         <TextView
             android:id="@+id/TextView01"
@@ -44,7 +50,7 @@
             android:layout_height="wrap_content"
             android:layout_alignParentLeft="true"
             android:layout_centerVertical="true"
-            android:text="Actors:" />
+            android:text="@string/actors_" />
     </RelativeLayout>
 
     <RelativeLayout
@@ -58,7 +64,9 @@
             android:layout_alignParentRight="true"
             android:layout_alignParentTop="true"
             android:layout_toRightOf="@+id/d"
+            android:hint="@string/hint_year"
             android:inputType="number"
+            android:singleLine="true"
             android:text="0" >
 
         </EditText>
@@ -69,7 +77,7 @@
             android:layout_height="wrap_content"
             android:layout_alignParentLeft="true"
             android:layout_centerVertical="true"
-            android:text="Year:" />
+            android:text="@string/year_" />
     </RelativeLayout>
 
     <RelativeLayout
@@ -82,7 +90,10 @@
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
             android:layout_alignParentTop="true"
-            android:layout_toRightOf="@+id/TextView02" />
+            android:layout_toRightOf="@+id/TextView02"
+            android:hint="@string/hint_genre"
+            android:inputType="text"
+            android:singleLine="true" />
 
         <TextView
             android:id="@+id/TextView02"
@@ -90,7 +101,7 @@
             android:layout_height="wrap_content"
             android:layout_alignParentLeft="true"
             android:layout_centerVertical="true"
-            android:text="Genres:" />
+            android:text="@string/genre_" />
     </RelativeLayout>
 
     <RelativeLayout
@@ -103,7 +114,10 @@
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
             android:layout_alignParentTop="true"
-            android:layout_toRightOf="@+id/TextView03" />
+            android:layout_toRightOf="@+id/TextView03"
+            android:hint="@string/hint_director"
+            android:inputType="text"
+            android:singleLine="true" />
 
         <TextView
             android:id="@+id/TextView03"
@@ -111,7 +125,7 @@
             android:layout_height="wrap_content"
             android:layout_alignParentLeft="true"
             android:layout_centerVertical="true"
-            android:text="Director:" />
+            android:text="@string/director_" />
     </RelativeLayout>
 
     <LinearLayout
@@ -123,19 +137,20 @@
             android:id="@+id/TextView05"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Rating:" />
+            android:text="@string/rating_" />
 
         <TextView
             android:id="@+id/textView2"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="From:" />
+            android:text="@string/from_" />
 
         <EditText
             android:id="@+id/from"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
+            android:hint="@string/hint_from"
             android:inputType="numberDecimal"
             android:maxLength="4"
             android:singleLine="true"
@@ -145,13 +160,14 @@
             android:id="@+id/textView3"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="To:" />
+            android:text="@string/to_" />
 
         <EditText
             android:id="@+id/to"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
+            android:hint="@string/hint_from"
             android:inputType="numberDecimal"
             android:maxLength="4"
             android:singleLine="true"

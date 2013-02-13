@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="rs.pedjaapps.md"
-    android:versionCode="1"
-    android:versionName="0.1beta" >
+    android:versionCode="4"
+    android:versionName="0.1.3beta" >
 
     <uses-sdk
         android:minSdkVersion="14"
@@ -20,7 +20,8 @@
         android:theme="@android:style/Theme.Holo.Light" >
 		
 		<provider android:name=".providers.SuggestionProvider"
-			android:authorities="rs.pedjaapps.md.providers.SuggestionProvider" />
+			android:authorities="rs.pedjaapps.md.providers.SuggestionProvider"
+			android:exported="false" />
 		
         <activity
             android:name=".ui.MoviesActivity"
@@ -63,7 +64,8 @@
 		<activity
             android:name="rs.pedjaapps.md.ui.BackupRestore"
             android:label="@string/backup_restore"
-            android:theme="@android:style/Theme.Holo.Light" >
+            android:theme="@android:style/Theme.Holo.Light"
+            android:exported="false" >
 			<intent-filter>
 				<action android:name="rs.pedjaapps.md.ui.BackupRestore" />
 				<category android:name="android.intent.category.DEFAULT" />
@@ -73,7 +75,8 @@
 		<activity
 		    android:label="Search Results"
 		     android:name=".ui.SearchResults" 
-		    android:launchMode="singleTop">
+		    android:launchMode="singleTop"
+		    android:exported="false">
         <intent-filter>
             <action android:name="android.intent.action.SEARCH" />
         </intent-filter>

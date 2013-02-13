@@ -18,7 +18,7 @@
        
         <ListPreference
                 android:key="theme"
-                android:defaultValue="light"
+                android:defaultValue="light_dark_action_bar"
                 android:title="@string/theme"
                 android:summary=""
                 android:entries="@array/theme_entry"
@@ -34,6 +34,11 @@
 			android:entries="@array/rat_entry"
 			android:entryValues="@array/rat_values"
 			android:dialogTitle="Which Rating To Display" />
+		<CheckBoxPreference
+			android:key="ads"
+			android:defaultValue="true"
+			android:title="Show Ads"
+			android:summary="Disable showing ads if you want" />
     </PreferenceCategory>
 	<PreferenceCategory
 		android:title="About">

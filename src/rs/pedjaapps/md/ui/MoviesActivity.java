@@ -24,7 +24,7 @@ public class MoviesActivity extends Activity
 	ActionBar actionBar;
 
 	private MoviesAdapter moviesAdapter;
-	private ListView moviesListView;
+	private GridView moviesListView;
 	String listName;
 
 	TextView tv1;
@@ -151,7 +151,7 @@ public class MoviesActivity extends Activity
 		ll = (LinearLayout) findViewById(R.id.ll1);
 
 
-		moviesListView = (ListView) findViewById(R.id.movie_list);
+		moviesListView = (GridView) findViewById(R.id.movie_list);
 
 
 		moviesAdapter = new MoviesAdapter(this, R.layout.movie_row);

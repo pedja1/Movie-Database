@@ -51,7 +51,7 @@
                 android:shadowDx="1"
                 android:shadowDy="1"
                 android:shadowRadius="2"
-                android:text="favorites"
+                android:text="@string/favorites"
                 android:textAppearance="?android:attr/textAppearanceLarge"
                 android:textColor="#07f3f0"
                 android:textSize="35sp" />
@@ -76,7 +76,7 @@
                 android:layout_height="wrap_content"
                 android:layout_centerVertical="true"
                 android:layout_toLeftOf="@+id/imageView2"
-                android:text="watchlist"
+                android:text="@string/watchlist"
                 
                 android:paddingRight="10dp"
                 android:textColor="#07f3f0"
