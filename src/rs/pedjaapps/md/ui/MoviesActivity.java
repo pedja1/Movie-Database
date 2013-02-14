@@ -2,7 +2,6 @@ package rs.pedjaapps.md.ui;
 
 import android.app.*;
 import android.content.*;
-import android.net.*;
 import android.os.*;
 import android.preference.*;
 import android.view.*;
@@ -10,11 +9,12 @@ import android.widget.*;
 import android.widget.AdapterView.*;
 import com.google.ads.*;
 import java.util.*;
-
 import rs.pedjaapps.md.*;
 import rs.pedjaapps.md.entries.*;
 import rs.pedjaapps.md.helpers.*;
-import rs.pedjaapps.md.tools.UpdateAllMovies;
+import rs.pedjaapps.md.tools.*;
+
+import rs.pedjaapps.md.R;
 
 public class MoviesActivity extends Activity
 {
@@ -25,7 +25,7 @@ public class MoviesActivity extends Activity
 
 	private MoviesAdapter moviesAdapter;
 	private GridView moviesListView;
-	String listName;
+	public static String listName;
 
 	TextView tv1;
 	LinearLayout ll;
@@ -38,7 +38,7 @@ public class MoviesActivity extends Activity
 
 	RelativeLayout container;
 	SearchView searchView;
-	List<MoviesEntry> entries;
+	public static List<MoviesEntry> entries;
 	int sortMode = 0;
 	SharedPreferences prefs;
 	SharedPreferences.Editor editor;
@@ -153,7 +153,7 @@ public class MoviesActivity extends Activity
 
 		moviesListView = (GridView) findViewById(R.id.movie_list);
 
-
+        moviesListView.setDrawingCacheEnabled(true);
 		moviesAdapter = new MoviesAdapter(this, R.layout.movie_row);
 
 		moviesListView.setAdapter(moviesAdapter);
@@ -443,24 +443,31 @@ public class MoviesActivity extends Activity
 		LayoutInflater inflater = (LayoutInflater) MoviesActivity.this
 				.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 		final View view = inflater.inflate(R.layout.filter_layout, null);
-		((EditText)view.findViewById(R.id.title)).setText(title);
-		((EditText)view.findViewById(R.id.actors)).setText(actor);
-		((EditText)view.findViewById(R.id.year)).setText(year+"");
-		((EditText)view.findViewById(R.id.genres)).setText(genres);
-		((EditText)view.findViewById(R.id.director)).setText(director);
-		((EditText)view.findViewById(R.id.from)).setText(from+"");
-		((EditText)view.findViewById(R.id.to)).setText(to+"");
+	final	EditText titl = (EditText)view.findViewById(R.id.title);
+		titl.setText(title);
+		final EditText act =	(EditText)view.findViewById(R.id.actors);
+		act.setText(actor);
+		final EditText yr = (EditText)view.findViewById(R.id.year);
+		yr.setText(year+"");
+	final	EditText gen = (EditText)view.findViewById(R.id.genres);
+		gen.setText(genres);
+		final EditText dir = (EditText)view.findViewById(R.id.director);
+		dir.setText(director);
+		final EditText fr = (EditText)view.findViewById(R.id.from);
+		fr.setText(from+"");
+		final EditText t = (EditText)view.findViewById(R.id.to);
+		t.setText(to+"");
 		builder.setPositiveButton("Filter", new DialogInterface.OnClickListener() {
 			@Override
 			public void onClick(DialogInterface dialog, int which)
 			{
-			title = ((EditText)view.findViewById(R.id.title)).getText().toString();
-			actor = ((EditText)view.findViewById(R.id.actors)).getText().toString();
-			year = Integer.parseInt(((EditText)view.findViewById(R.id.year)).getText().toString());
-			genres = ((EditText)view.findViewById(R.id.genres)).getText().toString();
-			director = ((EditText)view.findViewById(R.id.director)).getText().toString();
-			from = Double.parseDouble(((EditText)view.findViewById(R.id.from)).getText().toString());
-			to = Double.parseDouble(((EditText)view.findViewById(R.id.to)).getText().toString());
+			title = titl.getText().toString();
+			actor = act.getText().toString();
+			year = Integer.parseInt(yr.getText().toString());
+			genres = gen.getText().toString();
+			director = dir.getText().toString();
+			from = Double.parseDouble(fr.getText().toString());
+			to = Double.parseDouble(t.getText().toString());
 			editor.putString("title", title);	
 			editor.putString("actor", actor);
 			editor.putInt("year", year);
@@ -478,6 +485,36 @@ public class MoviesActivity extends Activity
 			public void onClick(DialogInterface dialog, int which)
 			{
 				
+			}
+			
+		});
+			builder.setNeutralButton("Clear", new DialogInterface.OnClickListener() {
+			@Override
+			public void onClick(DialogInterface dialog, int which)
+			{
+				titl.setText("");
+				act.setText("");
+				yr.setText(""+0);
+				gen.setText("");
+				dir.setText("");
+				fr.setText(""+0.0);
+				t.setText(""+10.0);
+				title = titl.getText().toString();
+				actor = act.getText().toString();
+				year = Integer.parseInt(yr.getText().toString());
+				genres = gen.getText().toString();
+				director = dir.getText().toString();
+				from = Double.parseDouble(fr.getText().toString());
+				to = Double.parseDouble(t.getText().toString());
+				editor.putString("title", title);	
+				editor.putString("actor", actor);
+				editor.putInt("year", year);
+				editor.putString("genres", genres);
+				editor.putString("director", director);
+				editor.putFloat("from", (float) from);
+				editor.putFloat("to", (float) to);
+				editor.apply();
+				recreateList(sortMode);
 			}
 			
 		});
