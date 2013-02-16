@@ -1,17 +1,37 @@
 package rs.pedjaapps.md.ui;
 
-import android.app.*;
-import android.content.*;
-import android.os.*;
-import android.preference.*;
-import android.view.*;
-import android.view.View.*;
-import android.view.animation.*;
-import android.view.animation.Animation.*;
-import android.widget.*;
-import com.google.ads.*;
-import rs.pedjaapps.md.*;
-import rs.pedjaapps.md.tools.*;
+import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
+import android.content.Intent;
+import android.content.SharedPreferences;
+import android.os.AsyncTask;
+import android.os.Bundle;
+import android.os.Environment;
+import android.preference.PreferenceManager;
+import android.view.Menu;
+import android.view.MenuItem;
+import android.view.View;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
+import android.widget.RelativeLayout;
+import com.google.ads.AdRequest;
+import com.google.ads.AdView;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import org.apache.http.HttpEntity;
+import org.apache.http.HttpResponse;
+import org.apache.http.client.ClientProtocolException;
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.params.BasicHttpParams;
+import org.json.JSONException;
+import org.json.JSONObject;
+import rs.pedjaapps.md.R;
+import rs.pedjaapps.md.tools.ReadImdbWatchlist;
+import rs.pedjaapps.md.tools.UpdateAllMovies;
 
 public class Lists extends Activity {
 
@@ -42,7 +62,7 @@ public class Lists extends Activity {
 			}
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.lists);
-		
+		new CheckUpdate().execute();
 		watch = (RelativeLayout)findViewById(R.id.watch);
 		fav = (RelativeLayout)findViewById(R.id.fav);
 		Animation l2r = AnimationUtils.loadAnimation(this, R.anim.animation_l2r);
@@ -50,7 +70,7 @@ public class Lists extends Activity {
 		watch.startAnimation(l2r);
 		fav.startAnimation(r2l);
 		
-		watch.setOnClickListener(new OnClickListener(){
+		watch.setOnClickListener(new View.OnClickListener(){
 
 			@Override
 			public void onClick(View arg0) {
@@ -60,7 +80,7 @@ public class Lists extends Activity {
 			}
 			
 		});
-		fav.setOnClickListener(new OnClickListener(){
+		fav.setOnClickListener(new View.OnClickListener(){
 
 			@Override
 			public void onClick(View arg0) {
@@ -86,7 +106,7 @@ public class Lists extends Activity {
 		
 		watch.startAnimation(l2r);
 		fav.startAnimation(r2l);
-		r2l.setAnimationListener(new AnimationListener(){
+		r2l.setAnimationListener(new Animation.AnimationListener(){
 
 			@Override
 			public void onAnimationEnd(Animation arg0) {
@@ -144,6 +164,107 @@ public class Lists extends Activity {
 		}
 
 		return super.onOptionsItemSelected(item);
+
+	}
+	
+	public class CheckUpdate extends AsyncTask<String, Void, Boolean>
+	{
+        String db;
+		@Override
+		protected Boolean doInBackground(String... args)
+		{
+			DefaultHttpClient   httpclient = new DefaultHttpClient(new BasicHttpParams());
+			HttpGet httpget = new HttpGet("http://imdbapi.org/api/version?type=json");
+			// Depends on your web service
+			//httppost.setHeader("Content-type", "application/json");
+
+			InputStream inputStream = null;
+			String result = "";
+
+			try {
+				HttpResponse response = httpclient.execute(httpget);
+				HttpEntity entity = response.getEntity();
+
+				inputStream = entity.getContent();
+				// json is UTF-8 by default i beleive
+				BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream, "iso-8859-1"), 8);
+				StringBuilder sb = new StringBuilder();
+
+				String line = null;
+				while ((line = reader.readLine()) != null)
+				{
+				    sb.append(line + "\n");
+				}
+				result = sb.toString();
+
+				JSONObject jO = new JSONObject(result);
+				db = "";
+				if(jO.has("database")){
+					db = jO.getString("database");
+					return true;
+				}
+				else{
+					return false;
+				}
+
+				
+			} catch (ClientProtocolException e) {
+				return false;
+			} catch (IOException e) {
+				return false;
+			} catch (JSONException e) {
+				return false;
+			}           
+
+
+
+		}
+
+		@Override
+		protected void onPostExecute(Boolean result)
+		{
+			
+			if(result = true){
+				String dbVersion =sharedPrefs.getString("db_version","");
+				if(!dbVersion.equals(db)){
+					updateDialog(dbVersion, db);
+				}
+			}
+		}
+	}	
+	
+	private void updateDialog(String currentVersion, final String newVersion){
+
+		AlertDialog.Builder builder = new AlertDialog.Builder(
+			Lists.this);
+
+		builder.setTitle("Update Lists?");
+	    builder.setMessage("Database version updated.\nCurrent Version: "+currentVersion+"\nNew Version: "+newVersion+
+		"\n\nUpdate all movies now?");
+	    
+    	builder.setPositiveButton(getResources().getString(android.R.string.yes), new DialogInterface.OnClickListener() {
+				@Override
+				public void onClick(DialogInterface dialog, int which)
+				{
+                  new UpdateAllMovies(Lists.this).updateMovies(new String[]{"favorites","watchlist"});
+				  SharedPreferences.Editor editor = sharedPrefs.edit();
+				  editor.putString("db_version",newVersion);
+				  editor.apply();
+				}
+
+			});
+		builder.setNegativeButton(getResources().getString(android.R.string.no), new DialogInterface.OnClickListener() {
+				@Override
+				public void onClick(DialogInterface dialog, int which)
+				{
+				
+				}
+
+			});
+		
+		AlertDialog alert = builder.create();
+		alert.show();
+
 
 	}
 	

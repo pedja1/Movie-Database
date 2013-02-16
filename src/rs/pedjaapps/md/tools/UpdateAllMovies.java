@@ -31,6 +31,7 @@ import org.json.JSONObject;
 
 import rs.pedjaapps.md.entries.*;
 import rs.pedjaapps.md.helpers.DatabaseHandler;
+import android.content.DialogInterface;
 
 public class UpdateAllMovies
 {
@@ -48,8 +49,8 @@ public class UpdateAllMovies
     	 this.context = context;
 	}
     
-    public void updateMovies(String list){
-    	new DownloadMovieInfo().execute(new String[]{list});
+    public void updateMovies(String[] list){
+    	new DownloadMovieInfo().execute(list);
     }
 
 	public class DownloadMovieInfo extends AsyncTask<String, String, String>
@@ -58,8 +59,8 @@ public class UpdateAllMovies
 		@Override
 		protected String doInBackground(String... args)
 		{
-			 
-			List<MoviesDatabaseEntry> movies = db.getAllMovies(args[0], "", "", 0, "", "", 0.0, 10);
+			 for(String s : args){
+			List<MoviesDatabaseEntry> movies = db.getAllMovies(s, "", "", 0, "", "", 0.0, 10);
 			
 			int lenght = movies.size();
 			for(int in = 0; in<lenght; in++){
@@ -200,7 +201,7 @@ public class UpdateAllMovies
 			}
 			}
 			
-			 
+			 }
 			return "";           
 			
 			
@@ -213,6 +214,15 @@ public class UpdateAllMovies
 			pd.setIndeterminate(true);
 			pd.setTitle("Updating movies");
 			pd.show();
+			pd.setOnCancelListener(new ProgressDialog.OnCancelListener(){
+
+					public void onCancel(DialogInterface p1)
+					{
+						DownloadMovieInfo.this.cancel(true);
+					}
+					
+				
+			});
 			 }
 		
 		@Override

@@ -421,7 +421,7 @@ public class MoviesActivity extends Activity
 				infoDialog();
 				break;
 			case 12:
-				new UpdateAllMovies(this).updateMovies(listName);
+				new UpdateAllMovies(this).updateMovies(new String[]{listName});
 				break;
 			case android.R.id.home:
 	            // app icon in action bar clicked; go home
