@@ -15,6 +15,7 @@ import rs.pedjaapps.md.helpers.*;
 import rs.pedjaapps.md.tools.*;
 
 import rs.pedjaapps.md.R;
+import android.util.SparseBooleanArray;
 
 public class MoviesActivity extends Activity
 {
@@ -33,7 +34,7 @@ public class MoviesActivity extends Activity
 	String theme;
 	int pos;
 
-	ActionMode aMode;
+	ActionMode mode;
 	TextView totalText;
 
 	RelativeLayout container;
@@ -50,6 +51,9 @@ public class MoviesActivity extends Activity
 	double from = 0.0;
 	double to = 10.0;
 	String rat;
+	List<ListsDatabaseEntry> lists;
+	//List<MoviesEntryMulti> e;
+	//MoviesAdapterMultiSelect moviesAdapterMulti;
 	
 
 	@Override
@@ -83,6 +87,7 @@ public class MoviesActivity extends Activity
 		from = prefs.getFloat("from", (float) from);
 		to = prefs.getFloat("to", (float) to);
 		super.onCreate(savedInstanceState);
+		//requestWindowFeature(Window.FEATURE_ACTION_BAR_OVERLAY);
 		setContentView(R.layout.activity_list);
 
 		sortMode = prefs.getInt("sortOrder", 0);
@@ -109,28 +114,6 @@ public class MoviesActivity extends Activity
 		searchView.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));
 		searchView.setIconifiedByDefault(false);
 		searchView.setQueryRefinementEnabled(true);
-	/*	searchView.setOnQueryTextListener(new OnQueryTextListener() {
-
-	    	    @Override
-	    	    public boolean onQueryTextSubmit(String query)
-				{
-	    	    	Intent intent = new Intent(MoviesActivity.this, SearchResults.class);
-	    			intent.putExtra("query", query);
-	    	    	intent.putExtra("listName", listName);
-	    			startActivity(intent);
-	    	        return true;
-	    	    }
-
-	    	    @Override
-	    	    public boolean onQueryTextChange(String newText)
-				{
-
-	    	        return false;
-	    	    }
-	    	});*/
-			
-		
-		
 		ImageView plus = (ImageView)findViewById(R.id.action_plus);
 		plus.setImageResource(isLight ? R.drawable.search_lite : R.drawable.search_dark);
 
@@ -163,6 +146,8 @@ public class MoviesActivity extends Activity
 			moviesAdapter.add(entry);
 
 		}
+		moviesListView.setChoiceMode(GridView.CHOICE_MODE_MULTIPLE_MODAL);
+		moviesListView.setMultiChoiceModeListener(new MultiChoiceModeListener());
 		setUI();
 		moviesListView.setOnItemClickListener(new OnItemClickListener(){
 
@@ -181,30 +166,271 @@ public class MoviesActivity extends Activity
 
 			});
 
-		moviesListView.setOnItemLongClickListener(new OnItemLongClickListener(){
-
-				@Override
-				public boolean onItemLongClick(AdapterView<?> arg0, View arg1,
-											   int position, long id)
-				{
-					if (aMode != null)
-					{
-						aMode.finish();
-					}
-					aMode = startActionMode(new ItemActionMode(position));
-
-					return true;
-				}
-
-
-
-			});
-
 
 
 	}
 
+	public class MultiChoiceModeListener implements GridView.MultiChoiceModeListener {
+		int id;
+		int selectedCount;
+		
+        public boolean onCreateActionMode(ActionMode mode, Menu menu) {
+			MoviesActivity.this.mode = mode;
+            mode.setTitle("Select Items");
+            mode.setSubtitle("One item selected");
+			if (theme.equals("light"))
+			{
+				isLight = true;
+			}
+			else if (theme.equals("dark"))
+			{
+				isLight = false;
+			}
+			else if (theme.equals("light_dark_action_bar"))
+			{
+				isLight = false;
+			}
+			menu.add(0, 5, 0, "Select All")
+				.setIcon(isLight ? R.drawable.select_all_dark : R.drawable.select_all_dark)
+				.setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM | MenuItem.SHOW_AS_ACTION_WITH_TEXT);
+            
+			menu.add(0, 2, 3, getResources().getString(R.string.delete))
+				.setIcon(isLight ? R.drawable.delete_light : R.drawable.delete_dark)
+				.setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM | MenuItem.SHOW_AS_ACTION_WITH_TEXT);
+            menu.add(0, 3, 1, "Move to")
+				.setIcon(isLight ? R.drawable.cut_light : R.drawable.cut_dark)
+				.setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM | MenuItem.SHOW_AS_ACTION_WITH_TEXT);
+			menu.add(0, 4, 2, "Copy to")
+				.setIcon(isLight ? R.drawable.copy_light : R.drawable.copy_dark)
+				.setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM | MenuItem.SHOW_AS_ACTION_WITH_TEXT);
+            
+			return true;
+			
+        }
 
+        public boolean onPrepareActionMode(ActionMode mode, Menu menu) {
+            return true;
+        }
+
+        public boolean onActionItemClicked(final ActionMode mode, MenuItem item) {
+		
+			if (item.getItemId() == 2)
+			{
+	    		deleteItemDialog();
+	    	}
+			if (item.getItemId() == 3)
+			{
+				AlertDialog.Builder builder = new AlertDialog.Builder(MoviesActivity.this);
+				builder.setTitle("Move "+selectedCount+" items to");
+		        lists = db.getAllLists();
+				List<CharSequence> items = new ArrayList<CharSequence>();
+				//	lists.remove(lists.indexOf(listName));
+				for(ListsDatabaseEntry e : lists){
+					items.add(e.get_name());
+				}
+				final CharSequence[] items2;
+
+				items2 = items.toArray(new String[0]);
+				builder.setItems(items2, new DialogInterface.OnClickListener() {
+						@Override
+						public void onClick(DialogInterface dialog, int item) {
+							
+							new MoveItems().execute(new Integer[]{item, 1});
+						}
+					});
+				AlertDialog alert = builder.create();
+				alert.show();
+
+	    	}
+			if (item.getItemId() == 4)
+			{
+				AlertDialog.Builder builder = new AlertDialog.Builder(MoviesActivity.this);
+				builder.setTitle("Copy "+selectedCount+" items to");
+		        lists = db.getAllLists();
+				List<CharSequence> items = new ArrayList<CharSequence>();
+				//	lists.remove(lists.indexOf(listName));
+				for(ListsDatabaseEntry e : lists){
+					items.add(e.get_name());
+				}
+				final CharSequence[] items2;
+
+				items2 = items.toArray(new String[0]);
+				builder.setItems(items2, new DialogInterface.OnClickListener() {
+						@Override
+						public void onClick(DialogInterface dialog, int item) {
+
+							new MoveItems().execute(new Integer[]{item, 0});
+						}
+					});
+				AlertDialog alert = builder.create();
+				alert.show();
+
+	    	}
+			if (item.getItemId() == 5)
+			{
+			
+				for ( int i=0; i< moviesAdapter.getCount(); i++ ) {
+					moviesListView.setItemChecked(i, true);
+				}
+			
+			}
+			
+            return true;
+        }
+
+        public void onDestroyActionMode(ActionMode mode) {
+        }
+
+        public void onItemCheckedStateChanged(ActionMode mode, int position, long id,
+                boolean checked) {
+			this.id = position;
+            int selectCount = moviesListView.getCheckedItemCount();
+			this.selectedCount = selectCount;
+            switch (selectCount) {
+            case 1:
+                mode.setSubtitle("One item selected");
+                break;
+            default:
+                mode.setSubtitle("" + selectCount + " items selected");
+                break;
+            }
+		
+        }
+
+    }
+	
+	public class MoveItems extends AsyncTask<Integer, Integer, Integer[]>
+	{
+
+		ProgressDialog pd;
+		final SparseBooleanArray checkedItems = moviesListView.getCheckedItemPositions();
+		int checkedItemsCount = checkedItems.size();
+		int move;
+		@Override
+		protected Integer[] doInBackground(Integer... args)
+		{
+			move = args[1];
+			final List<String> selectedItems = new ArrayList<String>();
+			for (int i = 0; i < checkedItemsCount; ++i) {
+				int position = checkedItems.keyAt(i);
+				if(checkedItems.valueAt(i))
+					selectedItems.add(moviesAdapter.getItem(position).getTitle());
+			}
+			Integer[] status = new Integer[]{0,0};
+			for(String s : selectedItems){
+				final MoviesDatabaseEntry entry = db.getMovieByName(listName, s);
+				if(!db.movieExists(lists.get(args[0]).get_name(), entry.get_title())){
+					db.addMovie(entry, lists.get(args[0]).get_name());
+					if(move == 1){
+					db.deleteMovie(entry, listName);
+					}
+					status[0]++;
+					publishProgress(selectedItems.indexOf(s));
+				}
+				else{
+					if(move == 1){
+					db.deleteMovie(entry, listName);
+					}
+					status[1]++;
+					publishProgress(selectedItems.indexOf(s));
+				}
+				
+			}
+			return status;
+
+		}
+
+		@Override
+		protected void onPreExecute(){
+			pd = new ProgressDialog(MoviesActivity.this);
+			if(move == 1){
+			pd.setMessage("Moving Movies");
+			}
+			else{
+				pd.setMessage("Coping Movies");
+			}
+			pd.setCancelable(false);
+			pd.setCanceledOnTouchOutside(false);
+			pd.show();
+		}
+
+		@Override
+		protected void onPostExecute(Integer[] result)
+		{
+			pd.dismiss();
+			recreateList(sortMode);
+			setUI();
+			mode.finish();
+			if(move == 1){
+			Toast.makeText(MoviesActivity.this, "Movied: "+result[0]+" Exists: " + result[1], Toast.LENGTH_LONG).show();
+			}
+			else{
+				Toast.makeText(MoviesActivity.this, "Copied: "+result[0]+" Exists: " + result[1], Toast.LENGTH_LONG).show();
+			}
+		}
+		@Override
+		protected void onProgressUpdate(Integer... progress){
+			if(move == 1){
+			pd.setMessage("Moving movies: " + progress[0]+"/"+checkedItemsCount);
+			}
+			else{
+				pd.setMessage("Coping movies: " + progress[0]+"/"+checkedItemsCount);
+			}
+		}
+	}	
+
+	public class DeleteItems extends AsyncTask<Integer, Integer, Integer>
+	{
+
+		ProgressDialog pd;
+		final SparseBooleanArray checkedItems = moviesListView.getCheckedItemPositions();
+		int checkedItemsCount = checkedItems.size();
+		@Override
+		protected Integer doInBackground(Integer... args)
+		{
+			final List<String> selectedItems = new ArrayList<String>();
+			for (int i = 0; i < checkedItemsCount; ++i) {
+				int position = checkedItems.keyAt(i);
+				if(checkedItems.valueAt(i))
+					selectedItems.add(moviesAdapter.getItem(position).getTitle());
+			}
+			
+			for(String s : selectedItems){
+				final MoviesDatabaseEntry entry = db.getMovieByName(listName, s);
+				db.deleteMovie(entry, listName);
+				publishProgress(selectedItems.indexOf(s));
+			}
+			return checkedItemsCount;
+
+		}
+
+		@Override
+		protected void onPreExecute(){
+			pd = new ProgressDialog(MoviesActivity.this);
+				pd.setMessage("Deleteing Items");
+			pd.setCancelable(false);
+			pd.setCanceledOnTouchOutside(false);
+			pd.show();
+		}
+
+		@Override
+		protected void onPostExecute(Integer result)
+		{
+			pd.dismiss();
+			recreateList(sortMode);
+			setUI();
+			mode.finish();
+				Toast.makeText(MoviesActivity.this, "Deleted: "+result+" movies", Toast.LENGTH_LONG).show();
+		
+		}
+		@Override
+		protected void onProgressUpdate(Integer... progress){
+			
+				pd.setMessage("Deleting movies: " + progress[0]+"/"+checkedItemsCount);
+			
+		}
+	}	
+	
 	public void onResume()
 	{
 		moviesAdapter.clear();
@@ -259,6 +485,7 @@ public class MoviesActivity extends Activity
 		return entries;
 	}
 
+	
 	
 
 	static class SortByRatingAscending implements Comparator<MoviesEntry>
@@ -334,14 +561,16 @@ public class MoviesActivity extends Activity
 	public void onRestoreInstanceState(Bundle savedInstanceState)
 	{
 		// Restore the previously serialized current dropdown position.
-
+		moviesListView.onRestoreInstanceState(savedInstanceState.getParcelable("list_position"));
+		
 	}
 
 	@Override
 	public void onSaveInstanceState(Bundle outState)
 	{
 		// Serialize the current dropdown position.
-
+		Parcelable state = moviesListView.onSaveInstanceState();
+		outState.putParcelable("list_position", state);
 	}
 
 	@Override
@@ -618,69 +847,11 @@ public class MoviesActivity extends Activity
 		}
 	}
 
-	private final class ItemActionMode implements ActionMode.Callback
-	{
-		int id;
-		public ItemActionMode(int id)
-		{
-			this.id = id;
-		}
-	    @Override
-	    public boolean onCreateActionMode(ActionMode mode, Menu menu)
-		{
-
-			//getSupportMenuInflater().inflate(R.menu.list_action, menu);
-	    	if (theme.equals("light"))
-			{
-				isLight = true;
-			}
-			else if (theme.equals("dark"))
-			{
-				isLight = false;
-			}
-			else if (theme.equals("light_dark_action_bar"))
-			{
-				isLight = false;
-			}
-			menu.add(2, 2, 2, getResources().getString(R.string.delete))
-				.setIcon(isLight ? R.drawable.delete_light : R.drawable.delete_dark)
-				.setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM | MenuItem.SHOW_AS_ACTION_WITH_TEXT);
-
-
-
-	        return true;
-	    }
-
-	    @Override
-	    public boolean onPrepareActionMode(ActionMode mode, Menu menu)
-		{
-	        return false;
-	    }
-
-	    @Override
-	    public boolean onActionItemClicked(ActionMode mode, MenuItem item)
-		{
-
-
-	    	if (item.getItemId() == 2)
-			{
-	    		deleteItemDialog(entries.get(id).getTitle(), id);
-	    	}
-	    	mode.finish();
-	        return true;
-	    }
-
-	    @Override
-	    public void onDestroyActionMode(ActionMode mode)
-		{
-	    }
-	}
-
-	private void deleteItemDialog(final String movieName, final int id)
+	private void deleteItemDialog()
 	{
 		AlertDialog.Builder builder = new AlertDialog.Builder(this);
 
-		builder.setTitle(getResources().getString(R.string.delete_item));
+		builder.setTitle("Delete selected movies?");
 		builder.setMessage(getResources().getString(R.string.are_you_sure));
 		builder.setIcon(isLight ? R.drawable.delete_light : R.drawable.delete_dark);
 
@@ -690,15 +861,7 @@ public class MoviesActivity extends Activity
 				@Override
 				public void onClick(DialogInterface dialog, int which)
 				{
-					MoviesDatabaseEntry entry = db
-						.getMovieByName(listName, movieName);
-
-					db.deleteMovie(entry, listName);
-
-					//moviesAdapter.remove(moviesAdapter.getItem(id));
-					//moviesAdapter.notifyDataSetChanged();
-					recreateList(sortMode);
-					setUI();
+					new DeleteItems().execute();
 
 				}
 			});

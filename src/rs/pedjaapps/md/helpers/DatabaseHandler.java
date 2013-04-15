@@ -5,6 +5,7 @@ import android.database.*;
 import android.database.sqlite.*;
 import java.util.*;
 import rs.pedjaapps.md.entries.*;
+import rs.pedjaapps.md.R;
 
 
 public class DatabaseHandler extends SQLiteOpenHelper
@@ -20,6 +21,8 @@ public class DatabaseHandler extends SQLiteOpenHelper
     // table names
 	private static final String TABLE_WATCHED = "favorites";
 	private static final String TABLE_WATCHLIST = "watchlist";
+	private static final String TABLE_LISTS = "lists";
+	
     //private static final String TABLE_ITEM = "item_table";
     // Table Columns names
 	
@@ -27,6 +30,10 @@ public class DatabaseHandler extends SQLiteOpenHelper
 	private static final String[] filds = {"_id", "title", "runtime", "rating", "genres",
 			"type","language", "poster", "url", "director",
 			"actors", "plot", "year", "country", "date", "user_rating", "imdb_id"};
+	
+	private static final String LIST_ID = "_id";
+	private static final String LIST_NAME = "name";
+	private static final String LIST_ICON = "icon";
 	
     public DatabaseHandler(Context context)
 	{
@@ -37,7 +44,29 @@ public class DatabaseHandler extends SQLiteOpenHelper
     @Override
     public void onCreate(SQLiteDatabase db)
 	{
-        String CREATE_WATCHLIST_TABLE = "CREATE TABLE " + TABLE_WATCHLIST + "("
+       
+		
+			
+		String CREATE_LIST_TABLE = "CREATE TABLE " + TABLE_LISTS + "("
+			+ LIST_ID + " INTEGER PRIMARY KEY,"
+			+ LIST_NAME + " TEXT,"
+			+ LIST_ICON + " INTEGER"
+			+
+			")";
+
+		db.execSQL(CREATE_LIST_TABLE);
+		createLists(new ListsDatabaseEntry("favorites", R.raw.fav), db);
+		createLists(new ListsDatabaseEntry("watchlist", R.raw.watchlist), db);
+    }
+
+	private void createLists(ListsDatabaseEntry entry, SQLiteDatabase db){
+		ContentValues values = new ContentValues();
+        values.put(LIST_NAME, entry.get_name());
+		values.put(LIST_ICON, entry.get_icon());
+
+        // Inserting Row
+        db.insert(TABLE_LISTS, null, values);
+        String CREATE_MOVIE_TABLE = "CREATE TABLE " + entry.get_name() + "("
 			+ filds[0] + " INTEGER PRIMARY KEY,"
 			+ filds[1] + " TEXT,"
 			+ filds[2] + " TEXT," 
@@ -57,34 +86,9 @@ public class DatabaseHandler extends SQLiteOpenHelper
 			+ filds[16] + " TEXT"
 			+
 			")";
-        
-		String CREATE_WATCHED_TABLE = "CREATE TABLE " + TABLE_WATCHED + "("
-			+ filds[0] + " INTEGER PRIMARY KEY AUTOINCREMENT,"
-			+ filds[1] + " TEXT,"
-			+ filds[2] + " TEXT," 
-			+ filds[3] + " DOUBLE,"
-			+ filds[4] + " TEXT,"
-			+ filds[5] + " TEXT," 
-			+ filds[6] + " TEXT,"
-			+ filds[7] + " TEXT,"
-			+ filds[8] + " TEXT," 
-			+ filds[9] + " TEXT,"
-			+ filds[10] + " TEXT,"
-			+ filds[11] + " TEXT," 
-			+ filds[12] + " INTEGER,"
-			+ filds[13] + " TEXT,"
-			+ filds[14] + " INTEGER," 
-			+ filds[15] + " DOUBLE,"
-			+ filds[16] + " TEXT"
-			+
-			")";
-			
-	
-		
-        db.execSQL(CREATE_WATCHLIST_TABLE);
-		db.execSQL(CREATE_WATCHED_TABLE);
-    }
 
+		db.execSQL(CREATE_MOVIE_TABLE);
+	}
     
     // Upgrading database
     @Override
@@ -102,7 +106,99 @@ public class DatabaseHandler extends SQLiteOpenHelper
      * All CRUD(Create, Read, Update, Delete) Operations
      */
 
-    
+    public void createMovieTable(String name){
+    	SQLiteDatabase db = this.getWritableDatabase();
+		String CREATE_MOVIE_TABLE = "CREATE TABLE " + name + "("
+			+ filds[0] + " INTEGER PRIMARY KEY,"
+			+ filds[1] + " TEXT,"
+			+ filds[2] + " TEXT," 
+			+ filds[3] + " DOUBLE,"
+			+ filds[4] + " TEXT,"
+			+ filds[5] + " TEXT," 
+			+ filds[6] + " TEXT,"
+			+ filds[7] + " TEXT,"
+			+ filds[8] + " TEXT," 
+			+ filds[9] + " TEXT,"
+			+ filds[10] + " TEXT,"
+			+ filds[11] + " TEXT," 
+			+ filds[12] + " INTEGER,"
+			+ filds[13] + " TEXT,"
+			+ filds[14] + " INTEGER,"
+			+ filds[15] + " DOUBLE,"
+			+ filds[16] + " TEXT"
+			+
+			")";
+            
+            db.execSQL(CREATE_MOVIE_TABLE);
+            db.close();
+    }
+	
+	public void addList(ListsDatabaseEntry entry)
+	{
+        SQLiteDatabase db = this.getWritableDatabase();
+
+        ContentValues values = new ContentValues();
+        values.put(LIST_NAME, entry.get_name());
+		values.put(LIST_ICON, entry.get_icon());
+
+        // Inserting Row
+        db.insert(TABLE_LISTS, null, values);
+        db.close(); // Closing database connection
+		createMovieTable(entry.get_name());
+    }
+	
+	public List<ListsDatabaseEntry> getAllLists()
+	{
+        List<ListsDatabaseEntry> lists = new ArrayList<ListsDatabaseEntry>();
+        // Select All Query
+        String selectQuery = "SELECT  * FROM " + TABLE_LISTS;
+
+        SQLiteDatabase db = this.getWritableDatabase();
+        Cursor cursor = db.rawQuery(selectQuery, null);
+
+        // looping through all rows and adding to list
+        if (cursor.moveToFirst())
+		{
+            do {
+				ListsDatabaseEntry list = new ListsDatabaseEntry();
+                list.set_id(Integer.parseInt(cursor.getString(0)));
+                list.set_name(cursor.getString(1));
+                list.set_icon(cursor.getInt(2));
+				
+                lists.add(list);
+            } while (cursor.moveToNext());
+        }
+
+        // return list
+        db.close();
+        cursor.close();
+        return lists;
+    }
+	
+	public boolean listExists(String name) {
+    	SQLiteDatabase db = this.getReadableDatabase();
+
+        Cursor cursor = db.query(TABLE_LISTS, new String[] { LIST_ID,
+									 LIST_NAME,
+									 LIST_ICON
+								 }, LIST_NAME + "=?",
+								 new String[] { name }, null, null, null, null);
+        boolean exists = (cursor.getCount() > 0);
+        cursor.close();
+        db.close();
+        return exists;
+	}
+	
+	public void deleteList(String name)
+	{
+        SQLiteDatabase db = this.getWritableDatabase();
+        db.delete(TABLE_LISTS, LIST_NAME + " = ?",
+				  new String[] { name });
+
+		db.execSQL("DROP TABLE "+ name);
+        db.close();
+    }
+	
     public void addMovie(MoviesDatabaseEntry movie, String table)
 	{
         SQLiteDatabase db = this.getWritableDatabase();
@@ -128,7 +224,6 @@ public class DatabaseHandler extends SQLiteOpenHelper
         // Inserting Row
         db.insert(table, null, values);
         db.close(); // Closing database connection
-		
     }
     
     public MoviesDatabaseEntry getMovie(String table, int id)
@@ -431,8 +526,8 @@ public class DatabaseHandler extends SQLiteOpenHelper
         SQLiteDatabase db = this.getReadableDatabase();
         Cursor cursor = db.rawQuery(countQuery, null);
        int count = cursor.getCount();
-	   cursor.close();
-        db.close();
+	  // cursor.close();
+      // db.close();
         // return count
         return count;
     }
