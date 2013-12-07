@@ -292,7 +292,8 @@ public class SearchResults extends Activity {
 	{
 
 		
-
+		/*17:03:30.420 System.err(25337)
+		 org.json.JSONException: Value {"link_template":"http:\/\/api.rottentomatoes.com\/api\/public\/v1.0\/movies.json?q={search-term}&page_limit={results-per-page}&page={page-number}","total":728,"links":{"self":"http:\/\/api.rottentomatoes.com\/api\/public\/v1.0\/movies.json?q=lost&page_limit=1&page=1","next":"http:\/\/api.rottentomatoes.com\/api\/public\/v1.0\/movies.json?q=lost&page_limit=1&page=2"},"movies":[{"id":"358124391","title":"Lost","alternate_ids":{"imdb":"0411008"},"abridged_cast":[{"id":"162696548","characters":["Jeremy Stanton"],"name":"Dean Cain"},{"id":"162654236","characters":["Judy"],"name":"Ashley Scott"},{"id":"358124392","characters":["Archer"],"name":"Danny Trejo"},{"id":"358124393","characters":["Cora Stanton"],"name":"Irina Bjorklund"},{"id":"358124395","characters":["Chester Gould"],"name":"Justin Henry"}],"synopsis":"","runtime":84,"links":{"alternate":"http:\/\/www.rottentomatoes.com\/m\/1156913-lost\/","reviews":"http:\/\/api.rottentomatoes.com\/api\/public\/v1.0\/movies\/358124391\/reviews.json","self":"http:\/\/api.rottentomatoes.com\/api\/public\/v1.0\/movies\/358124391.json","cast":"http:\/\/api.rottentomatoes.com\/api\/public\/v1.0\/movies\/358124391\/cast.json","clips":"http:\/\/api.rottentomatoes.com\/api\/public\/v1.0\/movies\/358124391\/clips.json","similar":"http:\/\/api.rottentomatoes.com\/api\/public\/v1.0\/movies\/358124391\/similar.json"},"year":2004,"release_dates":{"dvd":"2006-03-14","theater":"2005-05-13"},"mpaa_rating":"R","posters":{"original":"http:\/\/content6.flixster.com\/movie\/10\/87\/91\/10879172_ori.jpg","detailed":"http:\/\/content6.flixster.com\/movie\/10\/87\/91\/10879172_det.jpg","profile":"http:\/\/content6.flixster.com\/movie\/10\/87\/91\/10879172_pro.jpg","thumbnail":"http:\/\/content6.flixster.com\/movie\/10\/87\/91\/10879172_mob.jpg"},"ratings":{"critics_score":80,"critics_rating":"Fresh","audience_score":72,"audience_rating":"Upright"}}]} of type org.json.JSONObject cannot be converted to JSONArray*/
 		
 
 		@Override
@@ -301,7 +302,8 @@ public class SearchResults extends Activity {
 			entry = new ArrayList<SearchListEntry>();
 			//DatabaseHandler db = new DatabaseHandler(context);
 			DefaultHttpClient   httpclient = new DefaultHttpClient(new BasicHttpParams());
-			HttpGet httpget = new HttpGet("http://imdbapi.org/?title="+args[0]+"&type=json&plot=simple&episode=0&limit=10&yg=0&mt=none&lang=en-US&business=0&tech=0");
+			String url = "http://api.rottentomatoes.com/api/public/v1.0/movies.json?apikey=c54mnps84nd5w8awc4zpxzvb&q="+ args[0] +"&page_limit=1";
+			HttpGet httpget = new HttpGet(url);
 			// Depends on your web service
 			//httppost.setHeader("Content-type", "application/json");
 
@@ -323,14 +325,16 @@ public class SearchResults extends Activity {
 				    sb.append(line + "\n");
 				}
 				result = sb.toString();
-				JSONArray jA = new JSONArray(result);
+				Log.w("fff", result);
+				JSONObject obj = new JSONObject(result);
+				JSONArray jA = obj.getJSONArray("movies");
 				
 				for(int i = 0; i<jA.length(); i++){
 					JSONObject jO = jA.getJSONObject(i);
 					String title = jO.getString("title");
-					String id = jO.getString("imdb_id");
+					String id = jO.getString("id");
 					int year = jO.getInt("year");
-					String plot = jO.getString("plot_simple");
+					String plot = jO.getString("synopsis");
 					entry.add(new SearchListEntry(title, id, year, plot));
 					
 				}
